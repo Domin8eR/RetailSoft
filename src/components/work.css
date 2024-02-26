@@ -1,0 +1,67 @@
+.parent {
+    width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .activities {
+    margin: 20px;
+  }
+  
+  .activity {
+    margin-bottom: 8px;
+  }
+  
+  .remark,
+  .numberOfHours {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    
+  }
+  .remarkInput{
+    width: 680px;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+  }
+  
+  .buttons > div {
+    flex: 1;
+    margin: 10px;
+  }
+  
+  .buttons > div:last-child {
+    margin-right: 0;
+  }
+  
+  .buttons button {
+    width: 100%;
+  }
+
+  .row1{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .rowitem{
+    margin: 5px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(195, 193, 193, 0.57);
+    border-radius: 20px 20px;
+  }
+  .numberOfHours{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
