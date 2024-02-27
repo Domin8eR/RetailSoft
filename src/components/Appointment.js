@@ -44,9 +44,9 @@ const Appointment = () => {
         const email = e.target.email.value;
         const dov = e.target.dov.value;
         const tov = e.target.tov.value;
-        const setRemainder = e.target.setRemainder.checked;
-        const thankyouNotification = e.target.thankyouNotification.checked;
-        const visit = e.target.visit.checked;
+        const setRemainder = e.target.setRemainder ? e.target.setRemainder.checked : false;
+        const thankyouNotification = e.target.thankyouNotification ? e.target.thankyouNotification.checked : false;
+        const visit = e.target.visit ? e.target.visit.checked : false;
 
         let data = {
             username: username,
@@ -99,7 +99,7 @@ const Appointment = () => {
 
                 {isAdmin && (
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox defaultChecked name='setRemainder' />} label="Send Reminder Notification" />
+                        <FormControlLabel control={<Checkbox name='setRemainder' />} label="Send Reminder Notification" />
                         <FormControlLabel control={<Checkbox name='thankyouNotification' />} label="Send Thank You Notification" required />
                         <FormControlLabel control={<Checkbox name='visit' />} label="Visit Completed" required />
                     </FormGroup>

@@ -3,7 +3,7 @@ import { collection, getDocs } from "firebase/firestore";
 
 export const fetchDataFromFirestore = async () => {
     try {
-        const querySnapshot = await getDocs(collection(firestore, "digitylics"));
+        const querySnapshot = await getDocs(collection(firestore, "appoinement"));
         const data = querySnapshot.docs.map((doc) => doc.data());
         return data;
     } catch (error) {
