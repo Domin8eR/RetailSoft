@@ -25,10 +25,9 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 
-const pages = ['Appointments', 'Register', 'Login', 'Inventory_list', 'Update_inventory'];
+
+const pages = ['Appointments', 'Register', 'Login','Inventory_list', 'Update_inventory'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const adminEmail = process.env.REACT_APP_ADMIN_EMAIL;
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
@@ -62,7 +61,7 @@ function Navbar() {
         ))}
       </List>
       <Divider />
-      
+          
     </Box>
   );
 

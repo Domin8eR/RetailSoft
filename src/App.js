@@ -12,7 +12,6 @@ import { auth } from './firebase.config'; // Import auth from firebase.js (assum
 import UpdateInventory from './components/Update_inventory';
 import BasicTable from './components/Inventory_list';
 
-
 // Import necessary components and dependencies
 
 const App = () => {
@@ -45,7 +44,7 @@ const App = () => {
             {isLoggedIn && (
               <>
                <Route path="/update_inventory" element={<UpdateInventory />} />
-        <Route path="/inventory_list" element={<BasicTable/>} />
+            <Route path="/inventory_list" element={<BasicTable/>} />
                 <Route exact path="/appointment" element={<Appointment />} />
                 <Route exact path="/details" element={<Read />} />
                 <Route exact path="/appointments" element={<EmployeeWorkLog />} />

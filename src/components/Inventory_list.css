@@ -1,0 +1,44 @@
+/* InventoryList.css */
+
+.tableContainer {
+    margin: 20px;
+  }
+  
+  .tableHeaderCell {
+    font-weight: bold;
+  }
+  
+  .tableCell {
+    padding: 8px;
+  }
+  
+  .editButton {
+    color: blue;
+  }
+  
+  .deleteButton {
+    color: red;
+  }
+  
+  .transferButton {
+    color: green;
+  }
+  
+  .addButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .editForm {
+    margin: 20px;
+  }
+  
+  .formLabel {
+    margin-bottom: 5px;
+  }
+  
+  .formInput {
+    margin-bottom: 10px;
+  }
+  
