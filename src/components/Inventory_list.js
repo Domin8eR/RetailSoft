@@ -133,9 +133,9 @@ function BasicTable() {
                   <IconButton aria-label="delete" onClick={() => handleDelete(row.id)}>
                     <DeleteIcon />
                   </IconButton>
-                  <IconButton aria-label="transfer" onClick={handleTransferClick}>
+                  {/* <IconButton aria-label="transfer" onClick={handleTransferClick}>
                     <TransferWithinAStationIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}

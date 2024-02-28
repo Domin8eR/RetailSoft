@@ -147,9 +147,9 @@
 // }
 
 // export default UpdateInventory;
-
-import React, { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
+  
+import React, { useState} from 'react';
+// import { initializeApp } from 'firebase/app';
 import { useNavigate } from 'react-router-dom';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import './Update_inventory.css';
@@ -164,38 +164,24 @@ function UpdateInventory() {
   const [assignedTo, setAssignedTo] = useState('');
   const [date, setDateOfLastOrder] = useState('');
   const [reorderReminder, setReorderReminder] = useState(false);
-  const [peopleList, setPeopleList] = useState([]);
   const navigate = useNavigate();
 
 
-  useEffect(() => {
-    const firebaseConfig = {
-      apiKey:process.env.REACT_APP_API_KEY,
-  authDomain: "digilytics-80f52.firebaseapp.com",
-  projectId: "digilytics-80f52",
-  storageBucket: "digilytics-80f52.appspot.com",
-  messagingSenderId: "365028667698",
-  appId: "1:365028667698:web:ef9ac5217209ee655be72b"
-    };
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getFirestore();
 
-    // Fetch data if needed
-  }, []); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const firebaseConfig = {
-      apiKey:process.env.REACT_APP_API_KEY,
-  authDomain: "digilytics-80f52.firebaseapp.com",
-  projectId: "digilytics-80f52",
-  storageBucket: "digilytics-80f52.appspot.com",
-  messagingSenderId: "365028667698",
-  appId: "1:365028667698:web:ef9ac5217209ee655be72b"
-    };
+  //   const firebaseConfig = {
+  //     apiKey:process.env.REACT_APP_API_KEY,
+  // authDomain: "digilytics-80f52.firebaseapp.com",
+  // projectId: "digilytics-80f52",
+  // storageBucket: "digilytics-80f52.appspot.com",
+  // messagingSenderId: "365028667698",
+  // appId: "1:365028667698:web:ef9ac5217209ee655be72b"
+  //   };
     
-    const firebaseApp = initializeApp(firebaseConfig);
+    // const firebaseApp = initializeApp(firebaseConfig);
     const db = getFirestore();
 
     const data = {
