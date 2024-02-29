@@ -27,8 +27,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 
 
-const pages = ['Appointments', 'Register', 'Login','Inventory_list', 'Update_inventory'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Services', 'Register','Inventory_list', 'Update_inventory','Service_List'];
+const settings = ['Logout'];
 const adminEmail = process.env.REACT_APP_ADMIN_EMAIL;
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -105,7 +105,7 @@ function Navbar() {
       .then(() => {
         setUserData({});
         setIsLoggedIn(false);
-        navigate('/login');
+        navigate('/home');
       })
       .catch((error) => {
         console.log({ error });
@@ -155,7 +155,7 @@ function Navbar() {
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
-                (page !== 'Login' && isLoggedIn) || (page === 'Login' && !isLoggedIn) ? (
+                (page !== '' && isLoggedIn) || (page === '' && !isLoggedIn) ? (
                   <Button
                     key={page}
                     component={Link}

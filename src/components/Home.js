@@ -14,6 +14,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import Login from './Login';
 
 const Home = () => {
     const [open, setOpen] = React.useState(false);
@@ -54,11 +55,26 @@ const Home = () => {
 
     return (
         <div className="home">
-          <h1>Welcome to Rete'Soft </h1>
+          <div className="homeinfo">
+
+            <h1>Welcome to Rete'Soft </h1>
+
+            <Button variant="contained" style={{backgroundColor:"#1976d2"}}>
+              <Link to="/register" className='logintext'>Get Started with Us !!</Link>
+            </Button>
+
+            <br />
+            <span>Or</span>
+            <br />
+            <Login/>
+          </div>
+
+          
+
           <div className="homeButton">
               <Link to="/appointment">
-                  <Fab color="primary" aria-label="add">
-                      <AddIcon />
+                  <Fab style={{backgroundColor:"#1976d2"}} aria-label="add">
+                      <AddIcon style={{color:"#fff"}}/>
                   </Fab>
               </Link>
           </div>  

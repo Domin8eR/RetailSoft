@@ -11,6 +11,9 @@ import { onAuthStateChanged } from "firebase/auth"; // Import onAuthStateChanged
 import { auth } from './firebase.config'; // Import auth from firebase.js (assuming firebase.js is in the same directory)
 import UpdateInventory from './components/Update_inventory';
 import BasicTable from './components/Inventory_list';
+import SignUp from './components/Signup';
+import FetchEmployee from './components/FetchEmployee';
+
 
 // Import necessary components and dependencies
 
@@ -39,15 +42,17 @@ const App = () => {
             <Route exact path="/login" element={<Auth />} />
             <Route exact path="/home" element={<Home />} />
             <Route exact path="/" element={<Home />} />
-
+            <Route path="/register" element={<SignUp />} />
             {/* Protected Routes */}
             {isLoggedIn && (
               <>
                <Route path="/update_inventory" element={<UpdateInventory />} />
             <Route path="/inventory_list" element={<BasicTable/>} />
+           
                 <Route exact path="/appointment" element={<Appointment />} />
                 <Route exact path="/details" element={<Read />} />
-                <Route exact path="/appointments" element={<EmployeeWorkLog />} />
+                <Route exact path="/services" element={<EmployeeWorkLog />} />
+                <Route exact path="/service_list" element={<FetchEmployee />} />
               </>
             )}
 

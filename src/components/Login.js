@@ -60,7 +60,7 @@ const Login=() =>{
     <div className="App">
 
       {!isLoggedIn &&
-        <button onClick={SignUpUsingGoogle} type="button" className="login-with-google-btn" >
+        <button onClick={SignUpUsingGoogle} type="button" className="login-with-google-btn"  style={{backgroundColor:"#1976d2",color:"#fff"}}    >
           Sign in with Google
         </button>
       }

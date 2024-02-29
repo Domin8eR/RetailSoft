@@ -14,12 +14,16 @@ import SpaIcon from '@mui/icons-material/Spa';
 import HairstyleIcon from '@mui/icons-material/Brush';
 import MakeupIcon from '@mui/icons-material/Face';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { useNavigate } from "react-router-dom";
 
 const EmployeeWorkLog = () => {
-  
+  const navigate = useNavigate(); // useNavigate hook
+
   const [remarks, setRemarks] = useState("");
   const [timeSpent, setTimeSpent] = useState("");
   const [checkedItems, setCheckedItems] = useState([]);
+  const db = getFirestore(); // Initialize Firestore
 
   const handleRemarksChange = (event) => {
     setRemarks(event.target.value);
@@ -42,12 +46,19 @@ const EmployeeWorkLog = () => {
     setCheckedItems(newCheckedItems);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const data = {
       remarks: remarks,
       timeSpent: timeSpent,
       checkedItems: checkedItems
     };
+    try {
+      await addDoc(collection(db, 'activities_selected'), data);
+      console.log('Data saved to Firestore successfully!');
+      navigate("/home"); // Navigate to home after successful submission
+    } catch (error) {
+      console.error('Error saving data to Firestore: ', error);
+    }
   };
   
   
@@ -134,8 +145,8 @@ const EmployeeWorkLog = () => {
       </div>
 
       <div className="buttons">
-        <Button variant="contained" color="success" style={{margin:"20px"}}>
-          Submit
+        <Button variant="contained" color="success" style={{margin:"20px",backgroundColor:"#28a745"}} onClick={handleSubmit}>
+          <SendIcon/> Submit
         </Button>
         <Button variant="contained" color="error" style={{margin:"20px"}}>
           Cancel

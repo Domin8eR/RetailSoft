@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase.config.js';
 import { collection, addDoc } from "@firebase/firestore";
@@ -13,7 +13,8 @@ const Appointment = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState({});
-    const ref = collection(firestore, "digitylics");
+    const ref = collection(firestore, "appoinement");
+    const navigate = useNavigate(); // useNavigate hook
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -61,7 +62,8 @@ const Appointment = () => {
 
         try {
             await addDoc(ref, data);
-            alert("Message Sent");
+            console.log("Document successfully written!");
+            navigate("/home"); // Navigate to home after successful submission
         } catch (error) {
             console.error("Error adding document: ", error);
         }
@@ -105,7 +107,7 @@ const Appointment = () => {
                     </FormGroup>
                 )}
 
-                <button>Submit</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
     );
