@@ -1,12 +1,19 @@
-
-  
-import React, { useState} from 'react';
-// import { initializeApp } from 'firebase/app';
-import { useNavigate } from 'react-router-dom';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getFirestore, collection, addDoc, updateDoc, doc } from 'firebase/firestore';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
 import './Update_inventory.css';
 
 function UpdateInventory() {
+  const location = useLocation();
+  const rowData = location.state;
   const [action, setAction] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
@@ -18,7 +25,19 @@ function UpdateInventory() {
   const [reorderReminder, setReorderReminder] = useState(false);
   const navigate = useNavigate();
 
-
+  useEffect(() => {
+    if (rowData) {
+      setAction(rowData.action || '');
+      setItemName(rowData.itemName || '');
+      setItemDescription(rowData.itemDescription || '');
+      setQtyRemaining(rowData.quantity || '');
+      setQtyMetricUnit(rowData.unit || '');
+      setQtyRestockThreshold(rowData.reorderThreshold || '');
+      setAssignedTo(rowData.assignedTo || '');
+      setDateOfLastOrder(rowData.date || '');
+      setReorderReminder(rowData.reorderReminder || false);
+    }
+  }, [rowData]);
 
 
   const handleSubmit = async (e) => {
@@ -26,7 +45,7 @@ function UpdateInventory() {
 
     const db = getFirestore();
 
-    const data = {
+    const dataToUpdate = {
       action,
       itemName,
       itemDescription,
@@ -39,13 +58,27 @@ function UpdateInventory() {
     };
 
     try {
-      const docRef = await addDoc(collection(db, 'inventory'), data);
-      console.log('Document written with ID: ', docRef.id);
-      console.log('Data sent to Firestore successfully!');
+      if (action === 'update') {
+        if (rowData && rowData.id) {
+          const docRef = doc(db, 'inventory', rowData.id);
+          await updateDoc(docRef, dataToUpdate);
+          console.log('Document updated with ID: ', rowData.id);
+          console.log('Data updated in Firestore successfully!');
+        } else {
+          console.error('Row data or ID missing. Cannot update document.');
+        }
+      } else if (action === 'add' || action === 'transfer') {
+        const docRef = await addDoc(collection(db, 'inventory'), dataToUpdate);
+        console.log('Document written with ID: ', docRef.id);
+        console.log('Data added to Firestore successfully!');
+      } else {
+        console.error('Invalid action selected.');
+      }
+
       handleReset();
       navigate('/Inventory_list', { state: { updatedDate: date } });
     } catch (error) {
-      console.error('Error sending data to Firestore: ', error);
+      console.error('Error updating/adding data in Firestore: ', error);
     }
   };
 
@@ -62,54 +95,61 @@ function UpdateInventory() {
   };
 
   return (
-    <div>
-    <h2>Update Inventory</h2>
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="action">Action:</label>
-        <select id="action" value={action} onChange={(e) => setAction(e.target.value)}>
-          <option value="">Select Action</option>
-          <option value="add">Add</option>
-          <option value="update">Update/Edit</option>
-          <option value="transfer">Transfer</option>
-        </select>
+    <Container maxWidth="sm">
+      <div className="update-inventory">
+        <h2>Update Inventory</h2>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                select
+                label="Action"
+                variant="outlined"
+                value={action}
+                onChange={(e) => setAction(e.target.value)}
+              >
+                <MenuItem value="">Select Action</MenuItem>
+                <MenuItem value="add">Add</MenuItem>
+                <MenuItem value="update">Update/Edit</MenuItem>
+                <MenuItem value="transfer">Transfer</MenuItem>
+              </TextField>
+            </Grid>
+            {/* Other form fields */}
+            <Grid item xs={12}>
+              <TextField fullWidth label="Item Name" type="string" variant="outlined" value={itemName} onChange={(e) => setItemName(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Item Description" type="string" variant="outlined" value={itemDescription} onChange={(e) => setItemDescription(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Quantity" type="string" variant="outlined" value={quantity} onChange={(e) => setQtyRemaining(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Unit" type="string" variant="outlined" value={unit} onChange={(e) => setQtyMetricUnit(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Reorder Threshold" type="string" variant="outlined" value={reorderThreshold} onChange={(e) => setQtyRestockThreshold(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Assigned To" type="string" variant="outlined" value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Date" type="string" variant="outlined" value={date} onChange={(e) => setDateOfLastOrder(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox checked={reorderReminder} onChange={(e) => setReorderReminder(e.target.checked)} />} label="Reorder Reminder Notification" />
+              </FormGroup>
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary">Submit</Button>
+              <Button type="button" variant="contained" onClick={handleReset} style={{backgroundColor:"red"}}>Reset</Button>
+            </Grid>
+          </Grid>
+        </form>
       </div>
-      <div>
-        <label htmlFor="itemName">Item Name:</label>
-        <input type="text" id="itemName" value={itemName} onChange={(e) => setItemName(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="itemDescription">Item Description:</label>
-        <input type="text" id="itemDescription" value={itemDescription} onChange={(e) => setItemDescription(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="quantity">Quantity:</label>
-        <input type="text" id="quantity" value={quantity} onChange={(e) => setQtyRemaining(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="unit">Unit:</label>
-        <input type="text" id="unit" value={unit} onChange={(e) => setQtyMetricUnit(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="reorderThreshold">Reorder Threshold:</label>
-        <input type="text" id="reorderThreshold" value={reorderThreshold} onChange={(e) => setQtyRestockThreshold(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="assignedTo">Assigned To:</label>
-        <input type="text" id="assignedTo" value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} />
-      </div>
-      <div>
-        <label htmlFor="date">Date:</label>
-        <input type="date" id="date" value={date} onChange={(e) => setDateOfLastOrder(e.target.value)} />
-      </div>
-      <div>
-        <input type="checkbox" id="reorderReminder" checked={reorderReminder} onChange={(e) => setReorderReminder(e.target.checked)} />
-        <label htmlFor="reorderReminder">Reorder Reminder Notification</label>
-      </div>
-      <button type="submit">Submit</button>
-      <button type="button" onClick={handleReset}>Reset</button>
-    </form>
-  </div>
+    </Container>
   );
 }
 

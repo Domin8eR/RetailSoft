@@ -4,6 +4,8 @@ import Home from './components/Home';
 import Appointment from './components/Appointment';
 import Navbar from './components/Navbar';
 import "./App.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Read from './components/read';
 import EmployeeWorkLog from './components/EmployeeWorkLog';
 import Auth from './components/Login';
@@ -13,6 +15,9 @@ import UpdateInventory from './components/Update_inventory';
 import BasicTable from './components/Inventory_list';
 import SignUp from './components/Signup';
 import FetchEmployee from './components/FetchEmployee';
+import Login from './components/Login';
+import TransferTable from './components/Tranfer_table';
+
 
 
 // Import necessary components and dependencies
@@ -39,20 +44,23 @@ const App = () => {
         <div>
           <Routes>
             {/* Public Routes */}
-            <Route exact path="/login" element={<Auth />} />
+            <Route exact path="/appointment" element={<Appointment />} />
+            <Route exact path="/login" element={<Login/>} />
             <Route exact path="/home" element={<Home />} />
             <Route exact path="/" element={<Home />} />
             <Route path="/register" element={<SignUp />} />
+            {/* <Route path="/report" element={<Report />} /> */}
             {/* Protected Routes */}
             {isLoggedIn && (
               <>
                <Route path="/update_inventory" element={<UpdateInventory />} />
             <Route path="/inventory_list" element={<BasicTable/>} />
            
-                <Route exact path="/appointment" element={<Appointment />} />
+                
                 <Route exact path="/details" element={<Read />} />
                 <Route exact path="/services" element={<EmployeeWorkLog />} />
                 <Route exact path="/service_list" element={<FetchEmployee />} />
+                <Route exact path="/transfer_list" element={<TransferTable/>} />
               </>
             )}
 

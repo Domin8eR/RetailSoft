@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import { Fab } from '@mui/material';
@@ -16,70 +16,41 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Login from './Login';
 
+
 const Home = () => {
-    const [open, setOpen] = React.useState(false);
+  const [hoverText, setHoverText] = useState("");
 
-    const toggleDrawer = (newOpen) => () => {
-      setOpen(newOpen);
-    };
-  
-    const DrawerList = (
-      <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    );
+  const handleMouseEnter = () => {
+    setHoverText("Book appointment");
+    
+  };
 
-    return (
-        <div className="home">
-          <div className="homeinfo">
+  const handleMouseLeave = () => {
+    setHoverText("");
+  };
 
-            <h1>Welcome to Rete'Soft </h1>
+  return (
+    <div className="home">
+      <div className="homeinfo">
+        <h1>Welcome to RetailSoft </h1>
+      </div>
 
-            <Button variant="contained" style={{backgroundColor:"#1976d2"}}>
-              <Link to="/register" className='logintext'>Get Started with Us !!</Link>
-            </Button>
-
-            <br />
-            <span>Or</span>
-            <br />
-            <Login/>
-          </div>
-
-          
-
-          <div className="homeButton">
-              <Link to="/appointment">
-                  <Fab style={{backgroundColor:"#1976d2"}} aria-label="add">
-                      <AddIcon style={{color:"#fff"}}/>
-                  </Fab>
-              </Link>
-          </div>  
-        </div>
-    );
+      <div className="homeButton">
+       
+        <Link to="/appointment">
+          <Fab
+            style={{ backgroundColor: "#1976d2" }}
+            label="kjshgkjhfskgjk"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}>
+            <AddIcon style={{ color: "#fff" }} />
+          </Fab>
+        </Link>
+         <div style={{fontSize:"15px","margin":"10px"}}>Book an Appointment</div>
+      </div>
+      
+    </div>
+  );
 }
 
 export default Home;

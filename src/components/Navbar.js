@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -26,16 +28,17 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 
-
-const pages = ['Services', 'Register','Inventory_list', 'Update_inventory','Service_List'];
-const settings = ['Logout'];
-const adminEmail = process.env.REACT_APP_ADMIN_EMAIL;
+const pages = ['Services','Inventory_list', 'Update_inventory','Service_List','Transfer_List'];
+const settings = ['Login'];
+const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1,process.env.REACT_APP_ADMIN_EMAIL2,process.env.REACT_APP_ADMIN_EMAIL3];
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
+  const [adminEmails, setAdminEmails] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState(false);
   const theme = useTheme();
@@ -45,37 +48,25 @@ function Navbar() {
     setOpenDrawer(open);
   };
 
-  const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
-      <List>
-
-        {isLoggedIn && ['Appointments', 'Register', 'Login', 'Inventory_list', 'Update_inventory'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-          
-    </Box>
-  );
-
   useEffect(() => {
+    setAdminEmails(adminEmail);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { displayName, email } = user;
         setUserData({ displayName, email });
         setIsLoggedIn(true);
+  
+        // Check if the user's email is in the array of admin emails
+        if (adminEmails.includes(email)) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
       } else {
         setIsLoggedIn(false);
       }
     });
-
+  
     return () => unsubscribe();
   }, []);
 
@@ -112,6 +103,38 @@ function Navbar() {
       });
   };
 
+  const loginnnn=()=>{
+      navigate('/login');
+  }
+
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
+      <List>
+        {['Register', ...pages,].map((page, index) => (
+          <ListItem key={index} disablePadding>
+            <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '-')}`}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={page} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to={isLoggedIn ? '/logout' : '/login'}>
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={isLoggedIn ? 'Logout' : 'Login'} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </Box>
+  );
+
   return (
     <>
       <AppBar position="static">
@@ -127,7 +150,8 @@ function Navbar() {
             >
               <MenuIcon />
             </IconButton>
-            <AdbIcon sx={{ mr: 1 }} />
+            {/* <AdbIcon sx={{ mr: 1 }} /> */}
+            <img src="/ReteLogo.svg" alt="Rete Logo" style={{ height: 30, marginRight: 10 }} />
             <Typography
               variant="h6"
               noWrap
@@ -142,7 +166,7 @@ function Navbar() {
                 textDecoration: 'none',
               }}
             >
-              Rete'Soft
+              RetailSoft
             </Typography>
 
             <Drawer
@@ -154,10 +178,10 @@ function Navbar() {
             </Drawer>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
+              {pages.map((page, index) => (
                 (page !== '' && isLoggedIn) || (page === '' && !isLoggedIn) ? (
                   <Button
-                    key={page}
+                    key={index}
                     component={Link}
                     to={`/${page.toLowerCase().replace(/\s+/g, '-')}`}
                     sx={{ my: 2, color: 'white', display: 'block' }}
@@ -201,16 +225,11 @@ function Navbar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  setting === 'Logout' ? (
-                    <MenuItem key={setting} onClick={Logout}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ) : (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  )
+                {settings.map((setting, index) => (
+                  <MenuItem key={index} onClick={isLoggedIn ? Logout : loginnnn}>
+                    <Typography textAlign="center">{isLoggedIn ? 'Logout' : 'Login'}</Typography>
+                  </MenuItem>
+                    
                 ))}
               </Menu>
             </Box>

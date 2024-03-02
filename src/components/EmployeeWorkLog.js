@@ -16,6 +16,7 @@ import MakeupIcon from '@mui/icons-material/Face';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
+import Chip from '@mui/material/Chip';
 
 const EmployeeWorkLog = () => {
   const navigate = useNavigate(); // useNavigate hook
@@ -47,10 +48,12 @@ const EmployeeWorkLog = () => {
   };
 
   const handleSubmit = async () => {
+    const currentDate = new Date();
     const data = {
       remarks: remarks,
       timeSpent: timeSpent,
-      checkedItems: checkedItems
+      checkedItems: checkedItems,
+      date: currentDate
     };
     try {
       await addDoc(collection(db, 'activities_selected'), data);
@@ -60,62 +63,114 @@ const EmployeeWorkLog = () => {
       console.error('Error saving data to Firestore: ', error);
     }
   };
-  
+  const handleCancel = () => {
+    // Reset all input values
+    setRemarks("");
+    setTimeSpent("");
+    setCheckedItems([]);
+  };
+
+  const handleChipClick = (label) => {
+    if (!checkedItems.includes(label)) {
+      setCheckedItems([...checkedItems, label]);
+    }
+  };
+
+  const handleDelete = (label) => {
+    const newCheckedItems = checkedItems.filter((item) => item !== label);
+    setCheckedItems(newCheckedItems);
+  };
   
   return (
      <div className="parent">
-        activities:
+        <span style={{fontSize:"30px"}}>Services</span>
         
        <div className="activities">
           <div className="row1">
             <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Hair Cut")} />
-              <SpaIcon />
-              <span>Hair Cut</span>
+            <Chip
+              label="Haircut"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Haircut") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Haircut")}
+              onDelete={() => handleDelete("Haircut")}
+            />
             </div>
             <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Facial")} />
-              <FacialIcon />
-              <span>Facial</span>
+            <Chip
+              label="Facial"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Facial") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Facial")}
+              onDelete={() => handleDelete("Facial")}
+            />
             </div>
             <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Hair Coloring")} />
-              <HairColorIcon />
-              <span>Hair Coloring</span>
-            </div>
-          </div>
-          <div className="row1">
-            <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Manicure")} />
-              <ManicureIcon />
-              <span>Manicure</span>
-            </div>
-            <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Pedicure")} />
-              <PedicureIcon />
-              <span>Pedicure</span>
-            </div>
-            <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Waxing")} />
-              <WaxingIcon />
-              <span>Waxing</span>
+            <Chip
+              label="Hair Colouring"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Hair Colouring") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Hair Colouring")}
+              onDelete={() => handleDelete("Hair Colouring")}
+            />
             </div>
           </div>
           <div className="row1">
             <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Massage")} />
-              <SpaIcon />
-              <span>Massage</span>
+            <Chip
+              label="Manicure"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Manicure") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Manicure")}
+              onDelete={() => handleDelete("Manicure")}
+            />
             </div>
             <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Hairstyling")} />
-              <HairstyleIcon />
-              <span>Hairstyling</span>
+            <Chip
+              label="Pedicure"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Pedicure") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Pedicure")}
+              onDelete={() => handleDelete("Pedicure")}
+            />
             </div>
             <div className="rowitem">
-              <Checkbox onChange={() => handleCheckboxChange("Makeup")} />
-              <MakeupIcon />
-              <span>Makeup</span>
+            <Chip
+              label="Waxing"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Waxing") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Waxing")}
+              onDelete={() => handleDelete("Waxing")}
+            />
+            </div>
+          </div>
+          <div className="row1">
+            <div className="rowitem">
+            <Chip
+              label="Massage"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Massage") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Massage")}
+              onDelete={() => handleDelete("Massage")}
+            />
+            </div>
+            <div className="rowitem">
+            <Chip
+              label="Hairstyling"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("Hairstyling") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("Hairstyling")}
+              onDelete={() => handleDelete("Hairstyling")}
+            />
+            </div>
+            <div className="rowitem">
+            <Chip
+              label="MakeUp"
+              icon={<SpaIcon />}
+              variant={checkedItems.includes("MakeUp") ? "filled" : "outlined"}
+              onClick={() => handleChipClick("MakeUp")}
+              onDelete={() => handleDelete("MakeUp")}
+            />
             </div>
           </div>
        </div>
@@ -134,7 +189,7 @@ const EmployeeWorkLog = () => {
 
       <div className="numberOfHours">
         <AccessTimeIcon/>
-        <span style={{margin : "20px","fontSize":"23px"}}>Time Spend</span>
+        <span style={{margin : "20px","fontSize":"23px"}}>Time Spent</span>
         <TextField 
           type="number" 
           variant="outlined" 
@@ -146,9 +201,9 @@ const EmployeeWorkLog = () => {
 
       <div className="buttons">
         <Button variant="contained" color="success" style={{margin:"20px",backgroundColor:"#28a745"}} onClick={handleSubmit}>
-          <SendIcon/> Submit
+           Submit
         </Button>
-        <Button variant="contained" color="error" style={{margin:"20px"}}>
+        <Button variant="contained" color="error" style={{margin:"20px",backgroundColor:"red"}} onClick={handleCancel}>
           Cancel
         </Button>
       </div>

@@ -52,10 +52,11 @@
   
   button[type="button"] {
     margin-left: 10px;
-    background-color: #f44336;
+    background-color: #007bff;
+    color: "white";
   }
   
   button[type="button"]:hover {
-    background-color: #da190b;
+    background-color: #007bff;
   }
   

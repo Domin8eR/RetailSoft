@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc } from "@firebase/firestore";
+import { firestore } from "../firebase.config.js";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import { auth } from '../firebase.config.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Link, useNavigate } from 'react-router-dom';
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from '../firebase.config.js';
-import { collection, addDoc } from "@firebase/firestore";
-import { firestore } from "../firebase.config.js";
 import "./appointment.css";
+import { useNavigate } from 'react-router-dom';
 
-const Appointment = () => {
+const Appointment = (props) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState({});
@@ -63,53 +69,63 @@ const Appointment = () => {
         try {
             await addDoc(ref, data);
             console.log("Document successfully written!");
-            navigate("/home"); // Navigate to home after successful submission
+            toast.success("Appointment Booked successFully");
+            setTimeout(() => {
+              navigate("/home"); 
+            }, 3000); // Delay the navigation for 1000 milliseconds (1 second)
+            // Navigate to home after successful submission
         } catch (error) {
             console.error("Error adding document: ", error);
         }
     };
 
+    const handleReset = (e) => {
+        e.preventDefault();
+        const form = e.target.form;
+        form.reset();
+    };
+
     return (
-        <div className="appointment">
-            <h2>Appointment Form</h2>
-            <form onSubmit={addPost}>
-                <label htmlFor="username">Username</label>
-                <br />
-                <input type="text" placeholder='username' name='username' />
-                <br />
-                <br />
-                <label htmlFor="mobno">Mobile Number</label>
-                <br />
-                <input type="text" placeholder='mob no' name='mobno' />
-                <br />
-                <br />
-                <label htmlFor="email">Email</label>
-                <br />
-                <input type="text" placeholder='Email' name='email' />
-                <br />
-                <br />
-                <label htmlFor="datevisit">Date of Visit</label>
-                <br />
-                <input type="date" placeholder='date of Visit' name='dov' />
-                <br />
-                <br />
-                <label htmlFor="timevisit">Time of Visit</label>
-                <br />
-                <input type="time" placeholder='Time of Visit' name='tov' />
-                <br />
-                <br />
-
-                {isAdmin && (
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox name='setRemainder' />} label="Send Reminder Notification" />
-                        <FormControlLabel control={<Checkbox name='thankyouNotification' />} label="Send Thank You Notification" required />
-                        <FormControlLabel control={<Checkbox name='visit' />} label="Visit Completed" required />
-                    </FormGroup>
-                )}
-
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+        <Container maxWidth="sm">
+            <ToastContainer/>
+            <div className="appointment">
+                <h2 style={{margin:"20px"}}>Appointment Form</h2>
+                <form onSubmit={addPost}>
+                    <Grid container spacing={4}>    
+                        <Grid item xs={12}>
+                            <TextField fullWidth label="Customer Name" variant="outlined" type="string" placeholder="Customer Name" name="Customer Name" />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField fullWidth label="Mobile Number" variant="outlined" type="string" placeholder="Mobile Number" name="mobno" />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField fullWidth label="Email" variant="outlined" type="email" placeholder="Email" name="email" />
+                        </Grid>
+                        <Grid item xs={15}>
+                            <TextField fullWidth  label="Date of Visit" variant="outlined" type="date" placeholder="Date of Visit" name="dov" InputLabelProps={{ shrink: true }} />
+                        </Grid>
+                        <Grid item xs={15}>
+                            <TextField fullWidth label="Time of Visit" variant="outlined" type="time" placeholder="Time of Visit" name="tov" InputLabelProps={{ shrink: true }} />
+                        </Grid>
+                        
+                        
+                        {isAdmin && (
+                            <Grid item xs={12}>
+                                <FormGroup>
+                                    <FormControlLabel control={<Checkbox name='setRemainder' />} label="Send Reminder Notification" />
+                                    <FormControlLabel control={<Checkbox name='thankyouNotification' />} label="Send Thank You Notification" required />
+                                    <FormControlLabel control={<Checkbox name='visit' />} label="Visit Completed" required />
+                                </FormGroup>
+                            </Grid>
+                        )}
+                        <Grid item xs={12}>
+                            <Button type="submit" variant="contained" color="primary" style={{margin:"15px"}}>Submit</Button>
+                            <Button type="submit" variant="contained" color="primary" onClick={handleReset} style={{backgroundColor:"red",margin:"15px"}}>Reset</Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </div>
+        </Container>
     );
 }
 

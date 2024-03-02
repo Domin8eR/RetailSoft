@@ -17,7 +17,6 @@ import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom'; 
 import './Inventory_list.css';
 
-
 function BasicTable() {
   const [data, setData] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -64,9 +63,7 @@ function BasicTable() {
     await deleteDoc(doc(db, 'inventory', id));
   };
 
-  const handleTransferClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  
 
   const handleTransferClose = () => {
     setAnchorEl(null);
@@ -87,6 +84,17 @@ function BasicTable() {
     await updateDoc(doc(db, 'inventory', editedData.id), editedData);
     setIsEditing(false);
     setEditedItem(null);
+  };
+
+  const handleTransferAction = (event, row) => {
+    if( row.action = "transfer"){
+      navigate('/update_inventory', { state: { ...row, action: "transfer" }});
+    }
+    else if( row.action = "add"){
+      navigate('/update_inventory', { state: { ...row, action: "add" }});
+    }
+
+   
   };
 
   // Function to check if an object is empty
@@ -115,40 +123,44 @@ function BasicTable() {
           </TableHead>
           <TableBody>
             {data.map((row, index) => (
-              <TableRow key={row.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{row.action}</TableCell>
-                <TableCell>{row.itemName}</TableCell>
-                <TableCell>{row.itemDescription}</TableCell>
-                <TableCell>{row.quantity}</TableCell>
-                <TableCell>{row.unit}</TableCell>
-                <TableCell>{row.reorderThreshold}</TableCell>
-                <TableCell>{row.assignedTo}</TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.reorderReminder ? 'Yes' : 'No'}</TableCell>
-                <TableCell>
-                  <IconButton  aria-label="edit" onClick={() => handleEdit(row)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton aria-label="delete" onClick={() => handleDelete(row.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                  {/* <IconButton aria-label="transfer" onClick={handleTransferClick}>
-                    <TransferWithinAStationIcon />
-                  </IconButton> */}
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleTransferClose}
-                  >
-                    {accounts.map((account) => (
-                      <MenuItem key={account.id} onClick={() => handleTransferSelect(account.id)}>
-                        {account.name}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </TableCell>
-              </TableRow>
+              // Conditional rendering based on action
+              row.action !== 'transfer' && (
+                <TableRow key={row.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{row.action}</TableCell>
+                  <TableCell>{row.itemName}</TableCell>
+                  <TableCell>{row.itemDescription}</TableCell>
+                  <TableCell>{row.quantity}</TableCell>
+                  <TableCell>{row.unit}</TableCell>
+                  <TableCell>{row.reorderThreshold}</TableCell>
+                  <TableCell>{row.assignedTo}</TableCell>
+                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.reorderReminder ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>
+                    <IconButton sx={{color:"white"}} aria-label="edit" onClick={(event) => handleTransferAction(event, row)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton sx={{color:"black" ,"backgroundColor":"red"}} aria-label="delete" onClick={() => handleDelete(row.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton sx={{color:"white"}} aria-label="transfer" onClick={(event) => handleTransferAction(event, row)}>
+                      <TransferWithinAStationIcon />
+                    </IconButton>
+  
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleTransferClose}
+                    >
+                      {accounts.map((account) => (
+                        <MenuItem key={account.id} onClick={() => handleTransferSelect(account.id)}>
+                          {account.name}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </TableCell>
+                </TableRow>
+              )
             ))}
           </TableBody>
         </Table>
@@ -158,6 +170,8 @@ function BasicTable() {
           position: 'fixed',
           bottom: 20,
           right: 20,
+          backgroundColor:"blue",
+          color:"white"
         }}
         color="primary"
         aria-label="add"
@@ -174,6 +188,7 @@ function BasicTable() {
     </React.Fragment>
   );
 }
+
 function EditForm({ editedItem, handleFormSubmit }) {
   const [formData, setFormData] = useState(editedItem);
   
@@ -192,75 +207,8 @@ function EditForm({ editedItem, handleFormSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="itemName">Item Name:</label>
-      <input
-        type="text"
-        id="itemName"
-        name="itemName"
-        value={formData.itemName}
-        onChange={handleChange}
-      />
-      <label htmlFor="itemDescription">Item Description:</label>
-      <input
-        type="text"
-        id="itemDescription"
-        name="itemDescription"
-        value={formData.itemDescription}
-        onChange={handleChange}
-      />
-      <label htmlFor="quantity">Quantity:</label>
-      <input
-        type="text"
-        id="quantity"
-        name="quantity"
-        value={formData.quantity}
-        onChange={handleChange}
-      />
-      <label htmlFor="unit">Unit:</label>
-      <input
-        type="text"
-        id="unit"
-        name="unit"
-        value={formData.unit}
-        onChange={handleChange}
-      />
-      <label htmlFor="reorderThreshold">Reorder Threshold:</label>
-      <input
-        type="text"
-        id="reorderThreshold"
-        name="reorderThreshold"
-        value={formData.reorderThreshold}
-        onChange={handleChange}
-      />
-      <label htmlFor="assignedTo">Assigned To:</label>
-      <input
-        type="text"
-        id="assignedTo"
-        name="assignedTo"
-        value={formData.assignedTo}
-        onChange={handleChange}
-      />
-      <label htmlFor="date">Date:</label>
-      <input
-        type="text"
-        id="date"
-        name="date"
-        value={formData.date}
-        onChange={handleChange}
-      />
-      <label htmlFor="reorderReminder">Reorder Reminder:</label>
-      <input
-        type="checkbox"
-        id="reorderReminder"
-        name="reorderReminder"
-        checked={formData.reorderReminder}
-        onChange={handleChange}
-      />
-      <button type="submit">Save</button>
-    </form>
+    <div></div>
   );
 }
-
 
 export default BasicTable;

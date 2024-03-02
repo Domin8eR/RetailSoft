@@ -3,10 +3,13 @@ import './auth.css';
 import { useEffect, useState } from 'react';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase.config.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const Login=() =>{
-
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userData, setUserData] = useState({})
 
@@ -28,21 +31,27 @@ const Login=() =>{
     return () => unsubscribe();
   },[])
   
-  const SignUpUsingGoogle = () => {
-
+  const SignUpUsingGoogle =  () => {
+    // alert("CL:ICJKED ON THE LOGIN NUTTON")
     const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
       .then((result) => {
 
         const { displayName, email } = result.user;
         setUserData({ displayName, email })
-
-        setIsLoggedIn(true)
-      }).catch((error) => {
+        toast.success("Welcome " + displayName);
+        setTimeout(() => {
+          setIsLoggedIn(true);
+          navigate('/appointment');
+        }, 3000); // Delay the navigation for 1000 milliseconds (1 second)
+      })
+      .catch((error) => {
 
         console.log({ error });
 
       });
+      
+      
   }
 
   const Logout = () => {
@@ -58,20 +67,20 @@ const Login=() =>{
 
   return (
     <div className="App">
-
+      <ToastContainer/>
       {!isLoggedIn &&
-        <button onClick={SignUpUsingGoogle} type="button" className="login-with-google-btn"  style={{backgroundColor:"#1976d2",color:"#fff"}}    >
-          Sign in with Google
+        <button onClick={SignUpUsingGoogle}  type="button" className="login-with-google-btn"  style={{backgroundColor:"#8F00FF",color:"#fff"}}    >
+          Login With Google
         </button>
       }
 
       {isLoggedIn &&
         <div className="wrapper">
-          <div className="profile-card js-profile-card">
+          {/* <div className="profile-card js-profile-card">
 
            
 
-            <div className="profile-card__cnt js-profile-cnt">
+            {/* <div className="profile-card__cnt js-profile-cnt">
               <div className="profile-card__name">{userData.displayName}</div>
               <div className="profile-card__txt">{userData.email}</div>
               <div className="profile-card-loc">
@@ -79,9 +88,9 @@ const Login=() =>{
               <div className="profile-card-ctr">
                 <button className="profile-card__button button--orange" onClick={Logout}>Log out</button>
               </div>
-            </div>
+            </div> */}
 
-          </div>
+          {/* </div> */} 
         </div>
       }
 

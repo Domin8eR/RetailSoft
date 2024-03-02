@@ -42,10 +42,11 @@ function FetchEmployee() {
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
-              <TableCell />
+              
               <TableCell>Activity</TableCell>
               <TableCell>Remarks</TableCell>
               <TableCell>Time Spent (hours)</TableCell>
+              <TableCell>Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -61,23 +62,15 @@ function FetchEmployee() {
 
 function Row(props) {
   const { row } = props;
-
+  const formattedDate = row.date && row.date.toDate().toLocaleDateString();
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-           
-          >
-            
-          </IconButton>
-        </TableCell>
+        
         <TableCell component="th" scope="row">
           {row.checkedItems.map((item, i) => (
             <div key={i}>
-              {item === "Hair Cut" && <HairColorIcon />}
+              {item === "Haircut" && <HairColorIcon />}
               {item === "Facial" && <FacialIcon />}
               {item === "Hair Coloring" && <HairColorIcon />}
               {item === "Manicure" && <ManicureIcon />}
@@ -92,6 +85,7 @@ function Row(props) {
         </TableCell>
         <TableCell>{row.remarks}</TableCell>
         <TableCell>{row.timeSpent}</TableCell>
+        <TableCell>{formattedDate}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
