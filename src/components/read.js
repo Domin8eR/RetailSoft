@@ -9,17 +9,22 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { fetchDataFromFirestore } from "../api/database"; 
 import "./read.css";
+import { Link } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
+import { Fab } from '@mui/material';
+import './home.css';
 
 function Read() {
   const [info, setInfo] = useState([]);
+  const [searchDate, setSearchDate] = useState('');
+  const [filteredInfo, setFilteredInfo] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchDataFromFirestore(); 
         setInfo(data);
-        console.log(info);
-        
+        setFilteredInfo(data); // Initialize filteredInfo with all data
       } catch (error) {
         console.error("Error fetching documents: ", error);
       }
@@ -27,41 +32,72 @@ function Read() {
     fetchData(); 
   }, []);
 
+  const handleSearch = () => {
+    const filteredData = info.filter(item => item.dov.includes(searchDate));
+    setFilteredInfo(filteredData);
+  };
+
   return (
     <div className="read">
+      <div className="appointmentHeading">
+        <h1>Appointment Details</h1>
+      </div>
+      <div className='searchButton'>
+        <input
+        className='searchInput'
+          type="text"
+          placeholder="Customer Date of Visit"
+          value={searchDate}
+          onChange={(e) => setSearchDate(e.target.value)}
+          style={{ width: '200px', height: '35px' }}
+        />
+        <button onClick={handleSearch} style={{backgroundColor:"#007bff"}}>Search</button>
+      </div>
 
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow sx={{ backgroundColor: '#007bff' }}>
-            <TableCell sx={{ color: 'white' }}>Username</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Mobile Number</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Email</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Date of Visit</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Time of Visit</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Set Remainder</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Thankyou Notification</TableCell>
-            <TableCell align="right" sx={{ color: 'white' }}>Visit Again</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {info.map((data, index) => (
-            <TableRow key={index} >
-              <TableCell component="th" scope="row">
-                {data.username}
-              </TableCell>
-              <TableCell align="right">{data.mobno}</TableCell>
-              <TableCell align="right">{data.email}</TableCell>
-              <TableCell align="right">{data.dov}</TableCell>
-              <TableCell align="right">{data.tov}</TableCell>
-              <TableCell align="right">{data.setRemainder ? 'Yes' : 'No'}</TableCell>
-              <TableCell align="right">{data.thankyouNotification ? 'Yes' : 'No'}</TableCell>
-              <TableCell align="right">{data.visit ? 'Yes' : 'No'}</TableCell>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow sx={{ backgroundColor: '#007bff' }}>
+              <TableCell sx={{ color: 'white' }}>Username</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Mobile Number</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Email</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Date of Visit</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Time of Visit</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Set Remainder</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Thankyou Notification</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Visit Again</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {filteredInfo.map((data, index) => (
+              <TableRow key={index} >
+                <TableCell component="th" scope="row">
+                  {data.username}
+                </TableCell>
+                <TableCell align="right">{data.mobno}</TableCell>
+                <TableCell align="right">{data.email}</TableCell>
+                <TableCell align="right">{data.dov}</TableCell>
+                <TableCell align="right">{data.tov}</TableCell>
+                <TableCell align="right">{data.setRemainder ? 'Yes' : 'No'}</TableCell>
+                <TableCell align="right">{data.thankyouNotification ? 'Yes' : 'No'}</TableCell>
+                <TableCell align="right">{data.visit ? 'Yes' : 'No'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <div className="homeButton">
+       
+        <Link to="/appointment">
+          <Fab
+            style={{ backgroundColor: "#1976d2" }}
+            label="kjshgkjhfskgjk"
+            >
+            <AddIcon style={{ color: "#fff" }} />
+          </Fab>
+        </Link>
+         <div style={{fontSize:"15px","margin":"10px"}}>Book an Appointment</div>
+      </div>
     </div>
   );
 }

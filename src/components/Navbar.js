@@ -2,51 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Box from '@mui/material/Box';
-import AdbIcon from '@mui/icons-material/Adb';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase.config.js';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 
-const pages = ['Services','Inventory_list', 'Update_inventory','Service_List','Transfer_List'];
+const pages = ['Services', 'Inventory List', 'Update_inventory', 'Service_List', 'Transfer_List'];
 const settings = ['Login'];
-const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1,process.env.REACT_APP_ADMIN_EMAIL2,process.env.REACT_APP_ADMIN_EMAIL3];
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1, process.env.REACT_APP_ADMIN_EMAIL2, process.env.REACT_APP_ADMIN_EMAIL3];
+
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [userData, setUserData] = useState({});
   const [adminEmails, setAdminEmails] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [servicesAnchorEl, setServicesAnchorEl] = useState(null);
+  const [inventoryAnchorEl, setInventoryAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
-
-  const toggleDrawer = (open) => {
-    setOpenDrawer(open);
-  };
 
   useEffect(() => {
     setAdminEmails(adminEmail);
@@ -55,7 +37,7 @@ function Navbar() {
         const { displayName, email } = user;
         setUserData({ displayName, email });
         setIsLoggedIn(true);
-  
+
         // Check if the user's email is in the array of admin emails
         if (adminEmails.includes(email)) {
           setIsAdmin(true);
@@ -66,7 +48,7 @@ function Navbar() {
         setIsLoggedIn(false);
       }
     });
-  
+
     return () => unsubscribe();
   }, []);
 
@@ -103,37 +85,25 @@ function Navbar() {
       });
   };
 
-  const loginnnn=()=>{
-      navigate('/login');
-  }
+  const loginnnn = () => {
+    navigate('/login');
+  };
 
-  const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
-      <List>
-        {['Register', ...pages,].map((page, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '-')}`}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={page} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to={isLoggedIn ? '/logout' : '/login'}>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary={isLoggedIn ? 'Logout' : 'Login'} />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
-  );
+  const handleMenuClick = (event, anchor) => {
+    if (anchor === 'services') {
+      setServicesAnchorEl(event.currentTarget);
+    } else if (anchor === 'inventory') {
+      setInventoryAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleMenuClose = (anchor) => {
+    if (anchor === 'services') {
+      setServicesAnchorEl(null);
+    } else if (anchor === 'inventory') {
+      setInventoryAnchorEl(null);
+    }
+  };
 
   return (
     <>
@@ -145,12 +115,10 @@ function Navbar() {
               edge="start"
               color="inherit"
               aria-label="menu"
-              onClick={() => toggleDrawer(true)}
               sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
             >
               <MenuIcon />
             </IconButton>
-            {/* <AdbIcon sx={{ mr: 1 }} /> */}
             <img src="/ReteLogo.svg" alt="Rete Logo" style={{ height: 30, marginRight: 10 }} />
             <Typography
               variant="h6"
@@ -169,29 +137,67 @@ function Navbar() {
               RetailSoft
             </Typography>
 
-            <Drawer
-              anchor="left"
-              open={openDrawer}
-              onClose={() => toggleDrawer(false)}
-            >
-              {DrawerList}
-            </Drawer>
-
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page, index) => (
-                (page !== '' && isLoggedIn) || (page === '' && !isLoggedIn) ? (
-                  <Button
+              {/* Services dropdown */}
+              <Button
+                aria-haspopup="true"
+                aria-controls="services-menu"
+                onClick={(event) => handleMenuClick(event, 'services')}
+                color="inherit"
+                style={{backgroundColor:"#1976d2"}}
+              >
+                Services
+              </Button>
+              <Menu
+                id="services-menu"
+                anchorEl={servicesAnchorEl}
+                keepMounted
+                open={Boolean(servicesAnchorEl)}
+                onClose={() => handleMenuClose('services')}
+              >
+                {['Services', 'Service List'].map((page, index) => (
+                  <MenuItem
                     key={index}
                     component={Link}
-                    to={`/${page.toLowerCase().replace(/\s+/g, '-')}`}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
+                    to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}
+                    onClick={() => handleMenuClose('services')}
                   >
                     {page}
-                  </Button>
-                ) : null
-              ))}
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              {/* Inventory dropdown */}
+              <Button
+                aria-haspopup="true"
+                aria-controls="inventory-menu"
+                onClick={(event) => handleMenuClick(event, 'inventory')}
+                color="inherit"
+                style={{backgroundColor:"#1976d2"}}
+              >
+                Inventory
+              </Button>
+              <Menu
+                id="inventory-menu"
+                anchorEl={inventoryAnchorEl}
+                keepMounted
+                open={Boolean(inventoryAnchorEl)}
+                onClose={() => handleMenuClose('inventory')}
+              >
+                {['Inventory List', 'Update Inventory', 'Transfer List'].map((page, index) => (
+                  <MenuItem
+                    key={index}
+                    component={Link}
+                    to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}
+                    onClick={() => handleMenuClose('inventory')}
+                  >
+                    {page}
+                  </MenuItem>
+                ))}
+              </Menu>
+
               {/* Conditionally render Details link */}
-              {isLoggedIn && userData.email === adminEmail && (
+              {isLoggedIn && adminEmails.includes(userData.email) && (
                 <Button
                   key="Details"
                   component={Link}
@@ -204,7 +210,7 @@ function Navbar() {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings"  sx={{ display: 'flex', justifyContent: 'space-between' }} >
+              <Tooltip title="Open settings" sx={{ display: 'flex', justifyContent: 'space-between' }} >
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
@@ -229,7 +235,6 @@ function Navbar() {
                   <MenuItem key={index} onClick={isLoggedIn ? Logout : loginnnn}>
                     <Typography textAlign="center">{isLoggedIn ? 'Logout' : 'Login'}</Typography>
                   </MenuItem>
-                    
                 ))}
               </Menu>
             </Box>
