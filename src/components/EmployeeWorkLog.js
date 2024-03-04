@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import SendIcon from '@mui/icons-material/Send';
 import "./work.css"
-import FacialIcon from '@mui/icons-material/Face';
+import FacialIcon from '@mui/icons-material/Face2';
 import HairColorIcon from '@mui/icons-material/ColorLens';
 import ManicureIcon from '@mui/icons-material/LocalFlorist';
 import PedicureIcon from '@mui/icons-material/Spa';
 import WaxingIcon from '@mui/icons-material/Waves';
 import SpaIcon from '@mui/icons-material/Spa';
+import ColorLensIcon from '@mui/icons-material/Air';
 import HairstyleIcon from '@mui/icons-material/Brush';
 import MakeupIcon from '@mui/icons-material/Face';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -71,15 +69,20 @@ const EmployeeWorkLog = () => {
   };
 
   const handleChipClick = (label) => {
-    if (!checkedItems.includes(label)) {
-      setCheckedItems([...checkedItems, label]);
+    if (checkedItems.includes(label)) {
+        // If the item is already checked, remove it
+        const newCheckedItems = checkedItems.filter((item) => item !== label);
+        setCheckedItems(newCheckedItems);
+    } else {
+        // If the item is not checked, add it
+        setCheckedItems([...checkedItems, label]);
     }
-  };
+};
 
-  const handleDelete = (label) => {
-    const newCheckedItems = checkedItems.filter((item) => item !== label);
-    setCheckedItems(newCheckedItems);
-  };
+  // const handleDelete = (label) => {
+  //   const newCheckedItems = checkedItems.filter((item) => item !== label);
+  //   setCheckedItems(newCheckedItems);
+  // };
   
   return (
      <div className="parent">
@@ -90,28 +93,31 @@ const EmployeeWorkLog = () => {
             <div className="rowitem">
             <Chip
               label="Haircut"
-              icon={<SpaIcon />}
+              icon={<HairstyleIcon />}
               variant={checkedItems.includes("Haircut") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Haircut")}
-              onDelete={() => handleDelete("Haircut")}
+              // onDelete={() => handleDelete("Haircut")}
+              style={{width:"150px"}}
             />
             </div>
             <div className="rowitem">
             <Chip
               label="Facial"
-              icon={<SpaIcon />}
+              icon={<FacialIcon />}
               variant={checkedItems.includes("Facial") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Facial")}
-              onDelete={() => handleDelete("Facial")}
+              
+              style={{width:"150px"}}
             />
             </div>
             <div className="rowitem">
             <Chip
               label="Hair Colouring"
-              icon={<SpaIcon />}
+              icon={<HairColorIcon />}
               variant={checkedItems.includes("Hair Colouring") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Hair Colouring")}
-              onDelete={() => handleDelete("Hair Colouring")}
+              
+              style={{width:"150px"}}
             />
             </div>
           </div>
@@ -119,28 +125,31 @@ const EmployeeWorkLog = () => {
             <div className="rowitem">
             <Chip
               label="Manicure"
-              icon={<SpaIcon />}
+              icon={<ManicureIcon />}
               variant={checkedItems.includes("Manicure") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Manicure")}
-              onDelete={() => handleDelete("Manicure")}
+              
+              style={{width:"150px"}}
             />
             </div>
             <div className="rowitem">
             <Chip
               label="Pedicure"
-              icon={<SpaIcon />}
+              icon={<PedicureIcon />}
               variant={checkedItems.includes("Pedicure") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Pedicure")}
-              onDelete={() => handleDelete("Pedicure")}
+              
+              style={{width:"150px"}}
             />
             </div>
             <div className="rowitem">
             <Chip
               label="Waxing"
-              icon={<SpaIcon />}
+              icon={<WaxingIcon />}
               variant={checkedItems.includes("Waxing") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Waxing")}
-              onDelete={() => handleDelete("Waxing")}
+              
+              style={{width:"150px"}}
             />
             </div>
           </div>
@@ -151,25 +160,28 @@ const EmployeeWorkLog = () => {
               icon={<SpaIcon />}
               variant={checkedItems.includes("Massage") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Massage")}
-              onDelete={() => handleDelete("Massage")}
+              
+              style={{width:"150px"}}
             />
             </div>
             <div className="rowitem">
             <Chip
               label="Hairstyling"
-              icon={<SpaIcon />}
+              icon={<ColorLensIcon />}
               variant={checkedItems.includes("Hairstyling") ? "filled" : "outlined"}
               onClick={() => handleChipClick("Hairstyling")}
-              onDelete={() => handleDelete("Hairstyling")}
+              
+              style={{width:"150px"}}
             />
             </div>
             <div className="rowitem">
             <Chip
               label="MakeUp"
-              icon={<SpaIcon />}
+              icon={<MakeupIcon />}
               variant={checkedItems.includes("MakeUp") ? "filled" : "outlined"}
               onClick={() => handleChipClick("MakeUp")}
-              onDelete={() => handleDelete("MakeUp")}
+              
+              style={{width:"150px"}}
             />
             </div>
           </div>

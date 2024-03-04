@@ -45,16 +45,20 @@ const Appointment = (props) => {
     const addPost = async (e) => {
         e.preventDefault();
         console.log("Form submitted");
-
+    
         const username = e.target.username.value;
         const mobno = e.target.mobno.value;
         const email = e.target.email.value;
-        const dov = e.target.dov.value;
+        
+        // Get the date value and format it as DD-MM-YYYY
+        const dovValue = e.target.dov.value;
+        const dov = formatDate(dovValue);
+    
         const tov = e.target.tov.value;
         const setRemainder = e.target.setRemainder ? e.target.setRemainder.checked : false;
         const thankyouNotification = e.target.thankyouNotification ? e.target.thankyouNotification.checked : false;
         const visit = e.target.visit ? e.target.visit.checked : false;
-
+    
         let data = {
             username: username,
             mobno: mobno,
@@ -65,18 +69,26 @@ const Appointment = (props) => {
             thankyouNotification: thankyouNotification,
             visit: visit,
         };
-
+    
         try {
             await addDoc(ref, data);
             console.log("Document successfully written!");
-            toast.success("Appointment Booked successFully");
+            toast.success("Appointment Booked successfully");
             setTimeout(() => {
-              navigate("/home"); 
-            }, 3000); // Delay the navigation for 1000 milliseconds (1 second)
-            // Navigate to home after successful submission
+                navigate("/home"); 
+            }, 3000); // Delay the navigation for 3000 milliseconds (3 seconds)
         } catch (error) {
             console.error("Error adding document: ", error);
         }
+    };
+    
+    // Function to format date as DD-MM-YYYY
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
     };
 
     const handleReset = (e) => {
@@ -93,7 +105,7 @@ const Appointment = (props) => {
                 <form onSubmit={addPost}>
                     <Grid container spacing={4}>    
                         <Grid item xs={12}>
-                            <TextField fullWidth label="Customer Name" variant="outlined" type="string" placeholder="Customer Name" name="Customer Name" />
+                            <TextField fullWidth label="Customer Name" variant="outlined" type="string" placeholder="Customer Name" name="username" />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField fullWidth label="Mobile Number" variant="outlined" type="string" placeholder="Mobile Number" name="mobno" />

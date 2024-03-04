@@ -136,9 +136,11 @@ function Navbar() {
             >
               RetailSoft
             </Typography>
-
+              
+            
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {/* Services dropdown */}
+              {isLoggedIn && adminEmails.includes(userData.email) &&(
               <Button
                 aria-haspopup="true"
                 aria-controls="services-menu"
@@ -148,6 +150,7 @@ function Navbar() {
               >
                 Services
               </Button>
+              )}
               <Menu
                 id="services-menu"
                 anchorEl={servicesAnchorEl}
@@ -168,6 +171,7 @@ function Navbar() {
               </Menu>
 
               {/* Inventory dropdown */}
+              {isLoggedIn && adminEmails.includes(userData.email) &&(
               <Button
                 aria-haspopup="true"
                 aria-controls="inventory-menu"
@@ -177,6 +181,7 @@ function Navbar() {
               >
                 Inventory
               </Button>
+              )}
               <Menu
                 id="inventory-menu"
                 anchorEl={inventoryAnchorEl}
@@ -195,7 +200,7 @@ function Navbar() {
                   </MenuItem>
                 ))}
               </Menu>
-
+              
               {/* Conditionally render Details link */}
               {isLoggedIn && adminEmails.includes(userData.email) && (
                 <Button

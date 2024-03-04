@@ -7,11 +7,12 @@ import { GoogleAuthProvider, getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey:process.env.REACT_APP_API_KEY,
-  authDomain: "digilytics-80f52.firebaseapp.com",
-  projectId: "digilytics-80f52",
-  storageBucket: "digilytics-80f52.appspot.com",
-  messagingSenderId: "365028667698",
-  appId: "1:365028667698:web:ef9ac5217209ee655be72b"
+  authDomain: "retailsoft12.firebaseapp.com",
+  projectId: "retailsoft12",
+  storageBucket: "retailsoft12.appspot.com",
+  messagingSenderId: "182413591384",
+  appId: "1:182413591384:web:fb6d8627844f59d9459b2d",
+  measurementId: "G-JQ4YB425T5"
 };
 
 
