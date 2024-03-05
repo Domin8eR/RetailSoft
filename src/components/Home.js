@@ -46,7 +46,7 @@ const Home = () => {
             <AddIcon style={{ color: "#fff" }} />
           </Fab>
         </Link>
-         <div style={{fontSize:"15px","margin":"10px"}}>Book an Appointment</div>
+         <div  style={{fontSize:"15px","margin":"10px"}}>Book an Appointment</div>
       </div>
       
     </div>

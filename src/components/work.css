@@ -1,67 +1,54 @@
 .parent {
-    width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .activities {
-    margin: 20px;
-  }
-  
-  .activity {
-    margin-bottom: 8px;
-  }
-  
-  .remark,
-  .numberOfHours {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    
-  }
-  .remarkInput{
-    width: 680px;
-  }
-  
-  .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px;
-  }
-  
-  .buttons > div {
-    flex: 1;
-    margin: 10px;
-  }
-  
-  .buttons > div:last-child {
-    margin-right: 0;
-  }
-  
-  .buttons button {
-    width: 100%;
-  }
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
 
-  .row1{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-  .rowitem{
-    margin: 5px;
-    width: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background-color: rgba(195, 193, 193, 0.57);
-    border-radius: 20px 20px; */
-  }
-  .numberOfHours{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
+.activities {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.activity {
+  margin-bottom: 8px;
+}
+
+.remark,
+.numberOfHours {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.remarkInput {
+  width: 100%;
+  max-width: 680px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.buttons button {
+  margin-bottom: 10px;
+}
+
+.row1 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rowitem {
+  margin: 5px;
+  width: calc(50% - 10px); /* Two items per row with spacing */
+}
+
+.numberOfHours {
+  padding: 20px;
+}

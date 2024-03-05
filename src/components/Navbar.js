@@ -14,11 +14,19 @@ import MenuItem from '@mui/material/MenuItem';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase.config.js';
 import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import Drawer from '@mui/material/Drawer';
 
-const pages = ['Services', 'Inventory List', 'Update_inventory', 'Service_List', 'Transfer_List'];
+const pages = ['Services', 'Inventory List', 'Update Inventory', 'Service List', 'Transfer List'];
 const settings = ['Login'];
 const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1, process.env.REACT_APP_ADMIN_EMAIL2, process.env.REACT_APP_ADMIN_EMAIL3];
-
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -28,7 +36,40 @@ function Navbar() {
   const [adminEmails, setAdminEmails] = useState([]);
   const [servicesAnchorEl, setServicesAnchorEl] = useState(null);
   const [inventoryAnchorEl, setInventoryAnchorEl] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const navigate = useNavigate();
+
+  const toggleDrawer = (open) => {
+    setOpenDrawer(open);
+  };
+
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
+      <List>
+        {['Register', ...pages,].map((page, index) => (
+          <ListItem key={index} disablePadding>
+            <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={page} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to={isLoggedIn ? '/logout' : '/login'}>
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={isLoggedIn ? 'Logout' : 'Login'} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </Box>
+  );
 
   useEffect(() => {
     setAdminEmails(adminEmail);
@@ -110,11 +151,12 @@ function Navbar() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <IconButton
+          <IconButton
               size="large"
               edge="start"
               color="inherit"
               aria-label="menu"
+              onClick={() => toggleDrawer(true)}
               sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
             >
               <MenuIcon />
@@ -136,20 +178,25 @@ function Navbar() {
             >
               RetailSoft
             </Typography>
-              
-            
+            <Drawer
+              anchor="left"
+              open={openDrawer}
+              onClose={() => toggleDrawer(false)}
+            >
+              {DrawerList}
+            </Drawer>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {/* Services dropdown */}
-              {isLoggedIn && adminEmails.includes(userData.email) &&(
-              <Button
-                aria-haspopup="true"
-                aria-controls="services-menu"
-                onClick={(event) => handleMenuClick(event, 'services')}
-                color="inherit"
-                style={{backgroundColor:"#1976d2"}}
-              >
-                Services
-              </Button>
+              {isLoggedIn && adminEmails.includes(userData.email) && (
+                <Button
+                  aria-haspopup="true"
+                  aria-controls="services-menu"
+                  onClick={(event) => handleMenuClick(event, 'services')}
+                  color="inherit"
+                  style={{backgroundColor:"#1976d2"}}
+                >
+                  Services
+                </Button>
               )}
               <Menu
                 id="services-menu"
@@ -171,16 +218,16 @@ function Navbar() {
               </Menu>
 
               {/* Inventory dropdown */}
-              {isLoggedIn && adminEmails.includes(userData.email) &&(
-              <Button
-                aria-haspopup="true"
-                aria-controls="inventory-menu"
-                onClick={(event) => handleMenuClick(event, 'inventory')}
-                color="inherit"
-                style={{backgroundColor:"#1976d2"}}
-              >
-                Inventory
-              </Button>
+              {isLoggedIn && adminEmails.includes(userData.email) && (
+                <Button
+                  aria-haspopup="true"
+                  aria-controls="inventory-menu"
+                  onClick={(event) => handleMenuClick(event, 'inventory')}
+                  color="inherit"
+                  style={{backgroundColor:"#1976d2"}}
+                >
+                  Inventory
+                </Button>
               )}
               <Menu
                 id="inventory-menu"
@@ -200,7 +247,7 @@ function Navbar() {
                   </MenuItem>
                 ))}
               </Menu>
-              
+
               {/* Conditionally render Details link */}
               {isLoggedIn && adminEmails.includes(userData.email) && (
                 <Button

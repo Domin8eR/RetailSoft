@@ -101,8 +101,8 @@ const Appointment = (props) => {
         <Container maxWidth="sm">
             <ToastContainer/>
             <div className="appointment">
-                <h2 style={{margin:"20px"}}>Appointment Form</h2>
-                <form onSubmit={addPost}>
+                <h2 style={{ margin:"20px"}}>Appointment Form</h2>
+                <form onSubmit={addPost} >
                     <Grid container spacing={4}>    
                         <Grid item xs={12}>
                             <TextField fullWidth label="Customer Name" variant="outlined" type="string" placeholder="Customer Name" name="username" />
@@ -114,7 +114,7 @@ const Appointment = (props) => {
                             <TextField fullWidth label="Email" variant="outlined" type="email" placeholder="Email" name="email" />
                         </Grid>
                         <Grid item xs={15}>
-                            <TextField fullWidth  label="Date of Visit" variant="outlined" type="date" placeholder="Date of Visit" name="dov" InputLabelProps={{ shrink: true }} />
+                            <TextField  fullWidth  label="Date of Visit" variant="outlined" type="date" placeholder="Date of Visit" name="dov" InputLabelProps={{ shrink: true }} />
                         </Grid>
                         <Grid item xs={15}>
                             <TextField fullWidth label="Time of Visit" variant="outlined" type="time" placeholder="Time of Visit" name="tov" InputLabelProps={{ shrink: true }} />
