@@ -23,10 +23,15 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Drawer from '@mui/material/Drawer';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const pages = ['Services', 'Inventory List', 'Update Inventory', 'Service List', 'Transfer List'];
 const settings = ['Login'];
-const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1, process.env.REACT_APP_ADMIN_EMAIL2, process.env.REACT_APP_ADMIN_EMAIL3];
+const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1, process.env.REACT_APP_ADMIN_EMAIL2, process.env.REACT_APP_ADMIN_EMAIL3,process.env.REACT_APP_ADMIN_EMAIL4];
+const workerEmail = [process.env.REACT_APP_WORKER_EMAIL1,process.env.REACT_APP_WORKER_EMAIL2,process.env.REACT_APP_WORKER_EMAIL3,process.env.REACT_APP_WORKER_EMAIL4];
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -34,9 +39,10 @@ function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userData, setUserData] = useState({});
   const [adminEmails, setAdminEmails] = useState([]);
-  const [servicesAnchorEl, setServicesAnchorEl] = useState(null);
-  const [inventoryAnchorEl, setInventoryAnchorEl] = useState(null);
+  const [workerEmails, setWorkerEmails] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [servicesAnchorEl, setServicesAnchorEl] = useState(null); // Define state for Services anchor element
+  const [inventoryAnchorEl, setInventoryAnchorEl] = useState(null); // Define state for Inventory anchor element
   const navigate = useNavigate();
 
   const toggleDrawer = (open) => {
@@ -45,19 +51,66 @@ function Navbar() {
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
+        {isLoggedIn && (adminEmails.includes(userData.email) || workerEmails.includes(userData.email)) && 
       <List>
-        {['Register', ...pages,].map((page, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={page} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            onClick={(event) => event.stopPropagation()} // Add this line to stop event propagation
+          >
+            Services
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {['Services', 'Service List'].map((page, index) => (
+                <ListItem key={index} disablePadding>
+                  <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={page} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            onClick={(event) => event.stopPropagation()} // Add this line to stop event propagation
+          >
+            Inventory
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {['Inventory List', 'Update Inventory', 'Transfer List'].map((page, index) => (
+                <ListItem key={index} disablePadding>
+                  <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={page} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
       </List>
+      }
       <Divider />
+
+      {isLoggedIn && adminEmails.includes(userData.email) &&
+      <Button
+        key="Details"
+        component={Link}
+        to="/details"
+        sx={{ my: 2, color: 'white', display: 'block', backgroundColor: '#1976d2' }}
+      >
+        Details
+      </Button>
+      }
       <List>
         <ListItem disablePadding>
           <ListItemButton component={Link} to={isLoggedIn ? '/logout' : '/login'}>
@@ -73,6 +126,7 @@ function Navbar() {
 
   useEffect(() => {
     setAdminEmails(adminEmail);
+    setWorkerEmails(workerEmail);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { displayName, email } = user;
@@ -80,7 +134,7 @@ function Navbar() {
         setIsLoggedIn(true);
 
         // Check if the user's email is in the array of admin emails
-        if (adminEmails.includes(email)) {
+        if (adminEmails.includes(email) || workerEmails.includes(email)) {
           setIsAdmin(true);
         } else {
           setIsAdmin(false);
@@ -187,7 +241,7 @@ function Navbar() {
             </Drawer>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {/* Services dropdown */}
-              {isLoggedIn && adminEmails.includes(userData.email) && (
+              {isLoggedIn && (adminEmails.includes(userData.email) || workerEmails.includes(userData.email) ) && (
                 <Button
                   aria-haspopup="true"
                   aria-controls="services-menu"
@@ -218,7 +272,7 @@ function Navbar() {
               </Menu>
 
               {/* Inventory dropdown */}
-              {isLoggedIn && adminEmails.includes(userData.email) && (
+              {isLoggedIn && (adminEmails.includes(userData.email) || workerEmails.includes(userData.email) ) && (
                 <Button
                   aria-haspopup="true"
                   aria-controls="inventory-menu"

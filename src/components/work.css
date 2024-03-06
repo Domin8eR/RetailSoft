@@ -30,8 +30,8 @@
 
 .buttons {
   display: flex;
-  flex-direction: column;
-  margin: 10px;
+  justify-content: center;
+  
 }
 
 .buttons button {

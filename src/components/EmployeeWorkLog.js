@@ -15,6 +15,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
 import Chip from '@mui/material/Chip';
+import Grid from '@mui/material/Grid'; // Changed to Grid from Unstable_Grid2
 
 const EmployeeWorkLog = () => {
   const navigate = useNavigate(); // useNavigate hook
@@ -77,52 +78,42 @@ const EmployeeWorkLog = () => {
         // If the item is not checked, add it
         setCheckedItems([...checkedItems, label]);
     }
-};
+  };
 
-  // const handleDelete = (label) => {
-  //   const newCheckedItems = checkedItems.filter((item) => item !== label);
-  //   setCheckedItems(newCheckedItems);
-  // };
-  
   return (
      <div className="parent">
-        <span style={{fontSize:"30px"}}>Services</span>
+        <div style={{fontSize:"30px","margin" : "20px"}}>Services</div>
         
        <div className="activities">
-          <div className="row1">
-            <div className="rowitem">
-            <Chip
-              label="Haircut"
-              icon={<HairstyleIcon />}
-              variant={checkedItems.includes("Haircut") ? "filled" : "outlined"}
-              onClick={() => handleChipClick("Haircut")}
-              // onDelete={() => handleDelete("Haircut")}
-              style={{width:"150px"}}
-            />
-            </div>
-            <div className="rowitem">
-            <Chip
-              label="Facial"
-              icon={<FacialIcon />}
-              variant={checkedItems.includes("Facial") ? "filled" : "outlined"}
-              onClick={() => handleChipClick("Facial")}
-              
-              style={{width:"150px"}}
-            />
-            </div>
-            <div className="rowitem">
-            <Chip
-              label="Hair Colouring"
-              icon={<HairColorIcon />}
-              variant={checkedItems.includes("Hair Colouring") ? "filled" : "outlined"}
-              onClick={() => handleChipClick("Hair Colouring")}
-              
-              style={{width:"150px"}}
-            />
-            </div>
-          </div>
-          <div className="row1">
-            <div className="rowitem">
+          <Grid container spacing={1}> {/* Wrap all chips with Grid container */}
+            <Grid item xs={4}> {/* Three chips per row */}
+              <Chip
+                label="Haircut"
+                icon={<HairstyleIcon />}
+                variant={checkedItems.includes("Haircut") ? "filled" : "outlined"}
+                onClick={() => handleChipClick("Haircut")}
+                style={{width:"150px"}}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Chip
+                label="Facial"
+                icon={<FacialIcon />}
+                variant={checkedItems.includes("Facial") ? "filled" : "outlined"}
+                onClick={() => handleChipClick("Facial")}
+                style={{width:"150px"}}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Chip
+                label="Hair Colouring"
+                icon={<HairColorIcon />}
+                variant={checkedItems.includes("Hair Colouring") ? "filled" : "outlined"}
+                onClick={() => handleChipClick("Hair Colouring")}
+                style={{width:"150px"}}
+              />
+            </Grid>
+            <Grid item xs={4}>
             <Chip
               label="Manicure"
               icon={<ManicureIcon />}
@@ -131,8 +122,8 @@ const EmployeeWorkLog = () => {
               
               style={{width:"150px"}}
             />
-            </div>
-            <div className="rowitem">
+            </Grid>
+            <Grid item xs={4}>
             <Chip
               label="Pedicure"
               icon={<PedicureIcon />}
@@ -141,8 +132,8 @@ const EmployeeWorkLog = () => {
               
               style={{width:"150px"}}
             />
-            </div>
-            <div className="rowitem">
+            </Grid>
+            <Grid item xs={4}>
             <Chip
               label="Waxing"
               icon={<WaxingIcon />}
@@ -151,10 +142,8 @@ const EmployeeWorkLog = () => {
               
               style={{width:"150px"}}
             />
-            </div>
-          </div>
-          <div className="row1">
-            <div className="rowitem">
+            </Grid>
+            <Grid item xs={4}>
             <Chip
               label="Massage"
               icon={<SpaIcon />}
@@ -163,8 +152,8 @@ const EmployeeWorkLog = () => {
               
               style={{width:"150px"}}
             />
-            </div>
-            <div className="rowitem">
+            </Grid>
+            <Grid item xs={4}>
             <Chip
               label="Hairstyling"
               icon={<ColorLensIcon />}
@@ -173,8 +162,8 @@ const EmployeeWorkLog = () => {
               
               style={{width:"150px"}}
             />
-            </div>
-            <div className="rowitem">
+            </Grid>
+            <Grid item xs={4}>
             <Chip
               label="MakeUp"
               icon={<MakeupIcon />}
@@ -183,11 +172,11 @@ const EmployeeWorkLog = () => {
               
               style={{width:"150px"}}
             />
-            </div>
-          </div>
+            </Grid>
+          </Grid>
        </div>
 
-      <div className="remark">
+      <div className="remark" style={{margin : "20px"}}>
         <TextField
           className="remarkInput"
           multiline

@@ -77,3 +77,25 @@
       /* background-color: blue; */
     }
   }
+  @media screen and (max-width: 412px) {
+    .homeinfo h1{
+      font-size: 70px;
+    }
+    .homeButton{
+      position:fixed;
+      top:75%;
+      left:54%;
+      /* background-color: blue; */
+    }
+  }
+  @media screen and (max-width: 415px) {
+    .homeinfo h1{
+      font-size: 70px;
+    }
+    .homeButton{
+      position:fixed;
+      top:85%;
+      left:58%;
+      /* background-color: blue; */
+    }
+  }
