@@ -37,6 +37,12 @@ function Read() {
     setFilteredInfo(filteredData);
   };
 
+  // Form validation function
+  const isFormValid = () => {
+    // Check if searchDate is not empty
+    return searchDate.trim() !== '';
+  };
+
   return (
     <div className="read">
       <div className="appointmentHeading">
@@ -44,20 +50,20 @@ function Read() {
       </div>
       <div className='searchButton'>
         <input
-        className='searchInput'
+          className='searchInput'
           type="text"
           placeholder="Customer Date of Visit"
           value={searchDate}
           onChange={(e) => setSearchDate(e.target.value)}
           style={{ width: '200px', height: '35px' }}
         />
-        <button onClick={handleSearch} style={{backgroundColor:"#007bff"}}>Search</button>
+        <button onClick={handleSearch} style={{backgroundColor:"#007bff"}} disabled={!isFormValid()}>Search</button>
       </div>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#007bff' }}>
+            <TableRow sx={{ backgroundColor: '#1976D2' }}>
               <TableCell sx={{ color: 'white' }}>Username</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Mobile Number</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Email</TableCell>
@@ -87,12 +93,12 @@ function Read() {
         </Table>
       </TableContainer>
       <div className="homeButton">
-       
         <Link to="/appointment">
           <Fab
             style={{ backgroundColor: "#1976d2" }}
             label="kjshgkjhfskgjk"
-            >
+            disabled={!isFormValid()} // Disable the Fab if form is not valid
+          >
             <AddIcon style={{ color: "#fff" }} />
           </Fab>
         </Link>

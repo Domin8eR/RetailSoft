@@ -22,6 +22,17 @@ const Appointment = (props) => {
     const ref = collection(firestore, "appoinement");
     const navigate = useNavigate(); // useNavigate hook
 
+    const [formValues, setFormValues] = useState({
+        username: '',
+        mobno: '',
+        email: '',
+        dov: '',
+        tov: '',
+        setRemainder: false,
+        thankyouNotification: false,
+        visit: false,
+    });
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -45,33 +56,9 @@ const Appointment = (props) => {
     const addPost = async (e) => {
         e.preventDefault();
         console.log("Form submitted");
-    
-        const username = e.target.username.value;
-        const mobno = e.target.mobno.value;
-        const email = e.target.email.value;
-        
-        // Get the date value and format it as DD-MM-YYYY
-        const dovValue = e.target.dov.value;
-        const dov = formatDate(dovValue);
-    
-        const tov = e.target.tov.value;
-        const setRemainder = e.target.setRemainder ? e.target.setRemainder.checked : false;
-        const thankyouNotification = e.target.thankyouNotification ? e.target.thankyouNotification.checked : false;
-        const visit = e.target.visit ? e.target.visit.checked : false;
-    
-        let data = {
-            username: username,
-            mobno: mobno,
-            email: email,
-            dov: dov,
-            tov: tov,
-            setRemainder: setRemainder,
-            thankyouNotification: thankyouNotification,
-            visit: visit,
-        };
-    
+
         try {
-            await addDoc(ref, data);
+            await addDoc(ref, formValues);
             console.log("Document successfully written!");
             toast.success("Appointment Booked successfully");
             setTimeout(() => {
@@ -81,7 +68,7 @@ const Appointment = (props) => {
             console.error("Error adding document: ", error);
         }
     };
-    
+
     // Function to format date as DD-MM-YYYY
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -91,10 +78,29 @@ const Appointment = (props) => {
         return `${day}-${month}-${year}`;
     };
 
+    const handleInputChange = (e) => {
+        const { name, value, checked, type } = e.target;
+        const newValue = type === 'checkbox' ? checked : value;
+        setFormValues({ ...formValues, [name]: newValue });
+    };
+
     const handleReset = (e) => {
         e.preventDefault();
-        const form = e.target.form;
-        form.reset();
+        setFormValues({
+            username: '',
+            mobno: '',
+            email: '',
+            dov: '',
+            tov: '',
+            setRemainder: false,
+            thankyouNotification: false,
+            visit: false,
+        });
+    };
+
+    const isFormValid = () => {
+        const { username, mobno, email, dov, tov } = formValues;
+        return username && mobno && email && dov && tov;
     };
 
     return (
@@ -105,34 +111,34 @@ const Appointment = (props) => {
                 <form onSubmit={addPost} >
                     <Grid container spacing={4}>    
                         <Grid item xs={12}>
-                            <TextField fullWidth label="Customer Name" variant="outlined" type="string" placeholder="Customer Name" name="username" />
+                            <TextField fullWidth label="Customer Name" variant="outlined" type="string" placeholder="Customer Name" name="username" value={formValues.username} onChange={handleInputChange} />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField fullWidth label="Mobile Number" variant="outlined" type="string" placeholder="Mobile Number" name="mobno" />
+                            <TextField fullWidth label="Mobile Number" variant="outlined" type="string" placeholder="Mobile Number" name="mobno" value={formValues.mobno} onChange={handleInputChange} />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField fullWidth label="Email" variant="outlined" type="email" placeholder="Email" name="email" />
+                            <TextField fullWidth label="Email" variant="outlined" type="email" placeholder="Email" name="email" value={formValues.email} onChange={handleInputChange} />
                         </Grid>
                         <Grid item xs={15}>
-                            <TextField  fullWidth  label="Date of Visit" variant="outlined" type="date" placeholder="Date of Visit" name="dov" InputLabelProps={{ shrink: true }} />
+                            <TextField fullWidth label="Date of Visit" variant="outlined" type="date" placeholder="Date of Visit" name="dov" InputLabelProps={{ shrink: true }} value={formValues.dov} onChange={handleInputChange} />
                         </Grid>
                         <Grid item xs={15}>
-                            <TextField fullWidth label="Time of Visit" variant="outlined" type="time" placeholder="Time of Visit" name="tov" InputLabelProps={{ shrink: true }} />
+                            <TextField fullWidth label="Time of Visit" variant="outlined" type="time" placeholder="Time of Visit" name="tov" InputLabelProps={{ shrink: true }} value={formValues.tov} onChange={handleInputChange} />
                         </Grid>
                         
                         
                         {isAdmin && (
                             <Grid item xs={12}>
                                 <FormGroup>
-                                    <FormControlLabel control={<Checkbox name='setRemainder' />} label="Send Reminder Notification" />
-                                    <FormControlLabel control={<Checkbox name='thankyouNotification' />} label="Send Thank You Notification" required />
-                                    <FormControlLabel control={<Checkbox name='visit' />} label="Visit Completed" required />
+                                    <FormControlLabel control={<Checkbox name='setRemainder' checked={formValues.setRemainder} onChange={handleInputChange} />} label="Send Reminder Notification" />
+                                    <FormControlLabel control={<Checkbox name='thankyouNotification' checked={formValues.thankyouNotification} onChange={handleInputChange} />} label="Send Thank You Notification" required />
+                                    <FormControlLabel control={<Checkbox name='visit' checked={formValues.visit} onChange={handleInputChange} />} label="Visit Completed" required />
                                 </FormGroup>
                             </Grid>
                         )}
                         <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" style={{margin:"15px"}}>Submit</Button>
-                            <Button type="submit" variant="contained" color="primary" onClick={handleReset} style={{backgroundColor:"red",margin:"15px"}}>Reset</Button>
+                            <Button type="submit" variant="contained" color="primary" style={{margin:"15px"}} disabled={!isFormValid()}>Submit</Button>
+                            <Button type="reset" variant="contained" color="primary" onClick={handleReset} style={{backgroundColor:"red",margin:"15px"}}>Reset</Button>
                         </Grid>
                     </Grid>
                 </form>

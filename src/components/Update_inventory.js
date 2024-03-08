@@ -97,7 +97,7 @@ function UpdateInventory() {
   return (
     <Container maxWidth="sm">
       <div className="update-inventory">
-        <h2>Update Inventory</h2>
+        <h2 style={{"margin":"20px"}}>Update Inventory</h2>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
