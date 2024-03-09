@@ -84,7 +84,7 @@ function Navbar() {
           </AccordionSummary>
           <AccordionDetails>
             <List>
-              {['Inventory List', 'Update Inventory', 'Transfer List'].map((page, index) => (
+              {['Inventory List','Transfer List'].map((page, index) => (
                 <ListItem key={index} disablePadding>
                   <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}>
                     <ListItemIcon>
@@ -211,7 +211,7 @@ function Navbar() {
               color="inherit"
               aria-label="menu"
               onClick={() => toggleDrawer(true)}
-              sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
+              sx={{ mr: 2, display: { xs: 'flex' } }}
             >
               <MenuIcon />
             </IconButton>
@@ -239,111 +239,38 @@ function Navbar() {
             >
               {DrawerList}
             </Drawer>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {/* Services dropdown */}
-              {isLoggedIn && (adminEmails.includes(userData.email) || workerEmails.includes(userData.email) ) && (
-                <Button
-                  aria-haspopup="true"
-                  aria-controls="services-menu"
-                  onClick={(event) => handleMenuClick(event, 'services')}
-                  color="inherit"
-                  style={{backgroundColor:"#1976d2"}}
-                >
-                  Services
-                </Button>
-              )}
-              <Menu
-                id="services-menu"
-                anchorEl={servicesAnchorEl}
-                keepMounted
-                open={Boolean(servicesAnchorEl)}
-                onClose={() => handleMenuClose('services')}
-              >
-                {['Services', 'Service List'].map((page, index) => (
-                  <MenuItem
-                    key={index}
-                    component={Link}
-                    to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}
-                    onClick={() => handleMenuClose('services')}
-                  >
-                    {page}
-                  </MenuItem>
-                ))}
-              </Menu>
+           
 
-              {/* Inventory dropdown */}
-              {isLoggedIn && (adminEmails.includes(userData.email) || workerEmails.includes(userData.email) ) && (
-                <Button
-                  aria-haspopup="true"
-                  aria-controls="inventory-menu"
-                  onClick={(event) => handleMenuClick(event, 'inventory')}
-                  color="inherit"
-                  style={{backgroundColor:"#1976d2"}}
-                >
-                  Inventory
-                </Button>
-              )}
-              <Menu
-                id="inventory-menu"
-                anchorEl={inventoryAnchorEl}
-                keepMounted
-                open={Boolean(inventoryAnchorEl)}
-                onClose={() => handleMenuClose('inventory')}
-              >
-                {['Inventory List', 'Update Inventory', 'Transfer List'].map((page, index) => (
-                  <MenuItem
-                    key={index}
-                    component={Link}
-                    to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}
-                    onClick={() => handleMenuClose('inventory')}
-                  >
-                    {page}
-                  </MenuItem>
-                ))}
-              </Menu>
-
-              {/* Conditionally render Details link */}
-              {isLoggedIn && adminEmails.includes(userData.email) && (
-                <Button
-                  key="Details"
-                  component={Link}
-                  to="/details"
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Details
-                </Button>
-              )}
-            </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings" sx={{ display: 'flex', justifyContent: 'space-between' }} >
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting, index) => (
-                  <MenuItem key={index} onClick={isLoggedIn ? Logout : loginnnn}>
-                    <Typography textAlign="center">{isLoggedIn ? 'Logout' : 'Login'}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
+            <Box sx={{ flexGrow: 1 }} /> {/* This will push the settings menu to the right */}
+  <Box sx={{ mr: 2 }}> {/* Add margin to space it from other items */}
+    <Tooltip title="Open settings" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+      </IconButton>
+    </Tooltip>
+    <Menu
+      sx={{ mt: '45px' }}
+      id="menu-appbar"
+      anchorEl={anchorElUser}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={Boolean(anchorElUser)}
+      onClose={handleCloseUserMenu}
+    >
+      {settings.map((setting, index) => (
+        <MenuItem key={index} onClick={isLoggedIn ? Logout : loginnnn}>
+          <Typography textAlign="center">{isLoggedIn ? 'Logout' : 'Login'}</Typography>
+        </MenuItem>
+      ))}
+    </Menu>
+  </Box>
           </Toolbar>
         </Container>
       </AppBar>

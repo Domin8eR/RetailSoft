@@ -24,6 +24,7 @@ function BasicTable() {
   const [selectedAccount, setSelectedAccount] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // State for confirmation dialog
   const navigate = useNavigate(); // Use useNavigate hook for programmatic navigation
 
   useEffect(() => {
@@ -58,12 +59,20 @@ function BasicTable() {
     setIsEditing(true);
   };
 
-  const handleDelete = async (id) => {
-    const db = getFirestore();
-    await deleteDoc(doc(db, 'inventory', id));
+  const handleDelete = (id) => {
+    setDeleteConfirmation(id); // Trigger the confirmation dialog
   };
 
-  
+  // Function to handle deletion after user confirmation
+  const handleConfirmDelete = async () => {
+    const db = getFirestore();
+    await deleteDoc(doc(db, 'inventory', deleteConfirmation));
+    setDeleteConfirmation(null); // Reset confirmation state after deletion
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmation(null); // Reset confirmation state if deletion is canceled
+  };
 
   const handleTransferClose = () => {
     setAnchorEl(null);
@@ -87,14 +96,11 @@ function BasicTable() {
   };
 
   const handleTransferAction = (event, row) => {
-    if( row.action = "transfer"){
+    if (row.action === "transfer") {
       navigate('/update_inventory', { state: { ...row, action: "transfer" }});
-    }
-    else if( row.action = "add"){
+    } else if (row.action === "add") {
       navigate('/update_inventory', { state: { ...row, action: "add" }});
     }
-
-   
   };
 
   // Function to check if an object is empty
@@ -103,89 +109,98 @@ function BasicTable() {
   };
 
   return (
-    <React.Fragment>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>SR No.</TableCell>
-              <TableCell>Action</TableCell>
-              <TableCell>Item Name</TableCell>
-              <TableCell>Item Description</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Unit</TableCell>
-              <TableCell>Reorder Threshold</TableCell>
-              <TableCell>Assigned To</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Reorder Reminder</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((row, index) => (
-              // Conditional rendering based on action
-              row.action !== 'transfer' && (
-                <TableRow key={row.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{row.action}</TableCell>
-                  <TableCell>{row.itemName}</TableCell>
-                  <TableCell>{row.itemDescription}</TableCell>
-                  <TableCell>{row.quantity}</TableCell>
-                  <TableCell>{row.unit}</TableCell>
-                  <TableCell>{row.reorderThreshold}</TableCell>
-                  <TableCell>{row.assignedTo}</TableCell>
-                  <TableCell>{row.date}</TableCell>
-                  <TableCell>{row.reorderReminder ? 'Yes' : 'No'}</TableCell>
-                  <TableCell>
-                    <IconButton sx={{color:"white"}} aria-label="edit" onClick={(event) => handleTransferAction(event, row)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton sx={{color:"black" ,"backgroundColor":"red"}} aria-label="delete" onClick={() => handleDelete(row.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton sx={{color:"white"}} aria-label="transfer" onClick={(event) => handleTransferAction(event, row)}>
-                      <TransferWithinAStationIcon />
-                    </IconButton>
-  
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={handleTransferClose}
-                    >
-                      {accounts.map((account) => (
-                        <MenuItem key={account.id} onClick={() => handleTransferSelect(account.id)}>
-                          {account.name}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </TableCell>
-                </TableRow>
-              )
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <IconButton
-        sx={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          backgroundColor:"blue",
-          color:"white"
-        }}
-        color="primary"
-        aria-label="add"
-        onClick={() => navigate('/Update_inventory')}
-      >
-        <AddIcon fontSize="large" />
-      </IconButton>
-      {isEditing && (
-        <EditForm
-          editedItem={editedItem}
-          handleFormSubmit={handleFormSubmit}
+    <div className="inventoryList">
+      <React.Fragment>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow style={{"backgroundColor":"#1976d2"}}>
+                <TableCell style={{"color":"white"}}>SR No.</TableCell>
+                <TableCell style={{"color":"white"}}>Action</TableCell>
+                <TableCell style={{"color":"white"}}>Item Name</TableCell>
+                <TableCell style={{"color":"white"}}>Item Description</TableCell>
+                <TableCell style={{"color":"white"}}>Quantity</TableCell>
+                <TableCell style={{"color":"white"}}>Unit</TableCell>
+                <TableCell style={{"color":"white"}}>Reorder Threshold</TableCell>
+                <TableCell style={{"color":"white"}}>Assigned To</TableCell>
+                <TableCell style={{"color":"white"}}>Date</TableCell>
+                <TableCell style={{"color":"white"}}>Reorder Reminder</TableCell>
+                <TableCell style={{"color":"white"}}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((row, index) => (
+                // Conditional rendering based on action
+                row.action !== 'transfer' && (
+                  <TableRow key={row.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{row.action}</TableCell>
+                    <TableCell>{row.itemName}</TableCell>
+                    <TableCell>{row.itemDescription}</TableCell>
+                    <TableCell>{row.quantity}</TableCell>
+                    <TableCell>{row.unit}</TableCell>
+                    <TableCell>{row.reorderThreshold}</TableCell>
+                    <TableCell>{row.assignedTo}</TableCell>
+                    <TableCell>{row.date}</TableCell>
+                    <TableCell>{row.reorderReminder ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>
+                      <IconButton sx={{color:"white"}} aria-label="edit" onClick={(event) => handleTransferAction(event, row)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton sx={{color:"red" ,"backgroundColor":"red"}} aria-label="delete" onClick={() => handleDelete(row.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton sx={{color:"white"}} aria-label="transfer" onClick={(event) => handleTransferAction(event, row)}>
+                        <TransferWithinAStationIcon />
+                      </IconButton>
+    
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleTransferClose}
+                      >
+                        {accounts.map((account) => (
+                          <MenuItem key={account.id} onClick={() => handleTransferSelect(account.id)}>
+                            {account.name}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </TableCell>
+                  </TableRow>
+                )
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <IconButton
+          sx={{
+            position: 'fixed',
+            bottom: 20,
+            right: 20,
+            backgroundColor:"blue",
+            color:"white"
+          }}
+          color="primary"
+          aria-label="add"
+          onClick={() => navigate('/Update_inventory')}
+        >
+          <AddIcon fontSize="large" />
+        </IconButton>
+        {isEditing && (
+          <EditForm
+            editedItem={editedItem}
+            handleFormSubmit={handleFormSubmit}
+          />
+        )}
+
+        {/* Confirmation dialog */}
+        <ConfirmationDialog
+          open={!!deleteConfirmation}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
         />
-      )}
-    </React.Fragment>
+      </React.Fragment>
+    </div>
   );
 }
 
@@ -208,6 +223,21 @@ function EditForm({ editedItem, handleFormSubmit }) {
 
   return (
     <div></div>
+  );
+}
+
+// Confirmation dialog component
+function ConfirmationDialog({ open, onConfirm, onCancel }) {
+  if (!open) return null;
+
+  return (
+    <div className="confirmation-dialog">
+      <p>Are you sure you want to delete this item?</p>
+      <div>
+        <button onClick={onConfirm}>Yes</button>
+        <button onClick={onCancel}>No</button>
+      </div>
+    </div>
   );
 }
 

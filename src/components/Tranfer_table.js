@@ -87,7 +87,7 @@ function TransferTable() {
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            <TableRow sx={{ backgroundColor: 'blue' }}>
+            <TableRow sx={{ backgroundColor: "#1976d2" }}>
               <TableCell sx={{ color: 'white' }}>SR No.</TableCell>
               <TableCell sx={{ color: 'white' }}>Action</TableCell>
               <TableCell sx={{ color: 'white' }}>Item Name</TableCell>

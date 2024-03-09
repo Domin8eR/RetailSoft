@@ -37,16 +37,16 @@ function FetchEmployee() {
 
   return (
     <div className="parent">
-      <h2>Employee Activities Log</h2>
+      <h2 style={{margin:"30px"}}>Service List</h2>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
-            <TableRow>
+            <TableRow  style={{"backgroundColor":"#1976D2"}}>
               
-              <TableCell>Activity</TableCell>
-              <TableCell>Remarks</TableCell>
-              <TableCell>Time Spent (hours)</TableCell>
-              <TableCell>Date</TableCell>
+              <TableCell style={{"color":"white"}}>Activity</TableCell>
+              <TableCell style={{"color":"white"}}>Remarks</TableCell>
+              <TableCell style={{"color":"white"}}>Time Spent (hours)</TableCell>
+              <TableCell style={{"color":"white"}}>Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -69,10 +69,10 @@ function Row(props) {
         
         <TableCell component="th" scope="row">
           {row.checkedItems.map((item, i) => (
-            <div key={i}>
+            <div key={i} style={{display:"flex","alignItems":"center"}}>
               {item === "Haircut" && <HairColorIcon />}
               {item === "Facial" && <FacialIcon />}
-              {item === "Hair Coloring" && <HairColorIcon />}
+              {item === "Hair Colouring" && <HairColorIcon />}
               {item === "Manicure" && <ManicureIcon />}
               {item === "Pedicure" && <PedicureIcon />}
               {item === "Waxing" && <WaxingIcon />}

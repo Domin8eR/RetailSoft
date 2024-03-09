@@ -51,4 +51,13 @@
 
 .numberOfHours {
   padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust as per your requirement */
 }

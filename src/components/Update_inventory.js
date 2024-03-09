@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import './Update_inventory.css';
+import Snackbar from '@mui/material/Snackbar';
 
 function UpdateInventory() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function UpdateInventory() {
   const [assignedTo, setAssignedTo] = useState('');
   const [date, setDateOfLastOrder] = useState('');
   const [reorderReminder, setReorderReminder] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,6 +66,7 @@ function UpdateInventory() {
           await updateDoc(docRef, dataToUpdate);
           console.log('Document updated with ID: ', rowData.id);
           console.log('Data updated in Firestore successfully!');
+          setOpenSnackbar(true);
         } else {
           console.error('Row data or ID missing. Cannot update document.');
         }
@@ -71,12 +74,17 @@ function UpdateInventory() {
         const docRef = await addDoc(collection(db, 'inventory'), dataToUpdate);
         console.log('Document written with ID: ', docRef.id);
         console.log('Data added to Firestore successfully!');
+        setOpenSnackbar(true);
       } else {
         console.error('Invalid action selected.');
       }
 
       handleReset();
-      navigate('/Inventory_list', { state: { updatedDate: date } });
+      setTimeout(() => {
+        navigate('/Inventory_list', { state: { updatedDate: date } }); 
+    }, 3000);
+
+      
     } catch (error) {
       console.error('Error updating/adding data in Firestore: ', error);
     }
@@ -93,8 +101,12 @@ function UpdateInventory() {
     setDateOfLastOrder('');
     setReorderReminder(false);
   };
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
+    <>
     <Container maxWidth="sm">
       <div className="update-inventory">
         <h2 style={{"margin":"20px"}}>Update Inventory</h2>
@@ -135,7 +147,7 @@ function UpdateInventory() {
               <TextField fullWidth label="Assigned To" type="string" variant="outlined" value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-              <TextField fullWidth label="Date" type="string" variant="outlined" value={date} onChange={(e) => setDateOfLastOrder(e.target.value)} />
+              <TextField fullWidth  type="date" variant="outlined" value={date} onChange={(e) => setDateOfLastOrder(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
               <FormGroup>
@@ -150,6 +162,13 @@ function UpdateInventory() {
         </form>
       </div>
     </Container>
+    <Snackbar
+    open={openSnackbar}
+    autoHideDuration={6000}
+    onClose={handleSnackbarClose}
+    message={"Inventory Changes made successfully "}
+  />
+  </>
   );
 }
 

@@ -33,7 +33,14 @@ function Read() {
   }, []);
 
   const handleSearch = () => {
-    const filteredData = info.filter(item => item.dov.includes(searchDate));
+    // Convert searchDate to match the format stored in Firestore
+    const formattedDate = new Date(searchDate).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).replaceAll('/', '-'); // Replace '/' with '-' if needed
+  
+    const filteredData = info.filter(item => item.dov === formattedDate);
     setFilteredInfo(filteredData);
   };
 
@@ -51,7 +58,7 @@ function Read() {
       <div className='searchButton'>
         <input
           className='searchInput'
-          type="text"
+          type="date"
           placeholder="Customer Date of Visit"
           value={searchDate}
           onChange={(e) => setSearchDate(e.target.value)}
@@ -65,9 +72,9 @@ function Read() {
           <TableHead>
             <TableRow sx={{ backgroundColor: '#1976D2' }}>
               <TableCell sx={{ color: 'white' }}>Username</TableCell>
+              <TableCell align="right" sx={{ color: 'white' }}>Date of Visit</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Mobile Number</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Email</TableCell>
-              <TableCell align="right" sx={{ color: 'white' }}>Date of Visit</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Time of Visit</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Set Remainder</TableCell>
               <TableCell align="right" sx={{ color: 'white' }}>Thankyou Notification</TableCell>
@@ -80,9 +87,9 @@ function Read() {
                 <TableCell component="th" scope="row">
                   {data.username}
                 </TableCell>
+                <TableCell align="right">{data.dov}</TableCell>
                 <TableCell align="right">{data.mobno}</TableCell>
                 <TableCell align="right">{data.email}</TableCell>
-                <TableCell align="right">{data.dov}</TableCell>
                 <TableCell align="right">{data.tov}</TableCell>
                 <TableCell align="right">{data.setRemainder ? 'Yes' : 'No'}</TableCell>
                 <TableCell align="right">{data.thankyouNotification ? 'Yes' : 'No'}</TableCell>

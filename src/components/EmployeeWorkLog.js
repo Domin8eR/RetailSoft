@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import "./work.css"
@@ -16,6 +16,7 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid'; // Changed to Grid from Unstable_Grid2
+import Snackbar from '@mui/material/Snackbar';
 
 const EmployeeWorkLog = () => {
   const navigate = useNavigate(); // useNavigate hook
@@ -23,7 +24,14 @@ const EmployeeWorkLog = () => {
   const [remarks, setRemarks] = useState("");
   const [timeSpent, setTimeSpent] = useState("");
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const db = getFirestore(); // Initialize Firestore
+
+  useEffect(() => {
+    // Check if all required fields are filled
+    setIsFormValid(remarks !== "" && timeSpent !== "" && checkedItems.length > 0);
+  }, [remarks, timeSpent, checkedItems]);
 
   const handleRemarksChange = (event) => {
     setRemarks(event.target.value);
@@ -56,8 +64,11 @@ const EmployeeWorkLog = () => {
     };
     try {
       await addDoc(collection(db, 'activities_selected'), data);
-      console.log('Data saved to Firestore successfully!');
-      navigate("/home"); // Navigate to home after successful submission
+      
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        navigate("/home"); 
+    }, 3000); // Navigate to home after successful submission
     } catch (error) {
       console.error('Error saving data to Firestore: ', error);
     }
@@ -79,14 +90,18 @@ const EmployeeWorkLog = () => {
         setCheckedItems([...checkedItems, label]);
     }
   };
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
+    <>
      <div className="parent">
         <div style={{fontSize:"30px","margin" : "20px"}}>Services</div>
         
        <div className="activities">
           <Grid container spacing={1}> {/* Wrap all chips with Grid container */}
-            <Grid item xs={4}> {/* Three chips per row */}
+          <Grid item xs={4}>
               <Chip
                 label="Haircut"
                 icon={<HairstyleIcon />}
@@ -173,7 +188,9 @@ const EmployeeWorkLog = () => {
               style={{width:"150px"}}
             />
             </Grid>
+            {/* Other Chip components */}
           </Grid>
+          
        </div>
 
       <div className="remark" style={{margin : "20px"}}>
@@ -190,7 +207,7 @@ const EmployeeWorkLog = () => {
 
       <div className="numberOfHours">
         <AccessTimeIcon/>
-        <span style={{margin : "20px","fontSize":"23px"}}>Time Spent</span>
+        <span style={{margin : "20px","fontSize":"23px"}}>Time Spent(In Min)</span>
         <TextField 
           type="number" 
           variant="outlined" 
@@ -201,14 +218,32 @@ const EmployeeWorkLog = () => {
       </div>
 
       <div className="buttons">
-        <Button variant="contained" color="success" style={{margin:"20px",backgroundColor:"#28a745"}} onClick={handleSubmit}>
-           Submit
+        <Button 
+          variant="contained" 
+          color="success" 
+          style={{margin:"20px",backgroundColor:"#28a745"}}
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+        >
+          Submit
         </Button>
-        <Button variant="contained" color="error" style={{margin:"20px",backgroundColor:"red"}} onClick={handleCancel}>
+        <Button 
+          variant="contained" 
+          color="error" 
+          style={{margin:"20px",backgroundColor:"red"}} 
+          onClick={handleCancel}
+        >
           Cancel
         </Button>
       </div>
       </div>
+      <Snackbar
+    open={openSnackbar}
+    autoHideDuration={6000}
+    onClose={handleSnackbarClose}
+    message={"Submitted , Thankyou"}
+  />
+  </>
   );
 };
 
