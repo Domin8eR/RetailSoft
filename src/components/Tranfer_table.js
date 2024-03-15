@@ -68,20 +68,23 @@ function TransferTable() {
           placeholder="Date From"
           value={searchCriteria.dateFrom}
           onChange={(e) => setSearchCriteria({ ...searchCriteria, dateFrom: e.target.value })}
+          style={{ width: '100%', maxWidth: '200px', margin: '5px' }} // Add responsive styles
         />
         <input
           type="date"
           placeholder="Date To"
           value={searchCriteria.dateTo}
           onChange={(e) => setSearchCriteria({ ...searchCriteria, dateTo: e.target.value })}
+          style={{ width: '100%', maxWidth: '200px', margin: '5px' }} // Add responsive styles
         />
         <input
           type="text"
           placeholder="Assigned To"
           value={searchCriteria.assignedTo}
           onChange={(e) => setSearchCriteria({ ...searchCriteria, assignedTo: e.target.value })}
+          style={{ width: '100%', maxWidth: '200px', margin: '5px' }} // Add responsive styles
         />
-        <button onClick={handleSearch} style={{backgroundColor:"#1976d2"}}>Search</button>
+        <button onClick={handleSearch} style={{backgroundColor:"#1976d2", margin: '5px'}}>Search</button>
       </div>
 
       <TableContainer component={Paper}>

@@ -27,8 +27,11 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DesignServicesIcon from '@mui/icons-material/DesignServices'; // Import Services icon
+import EventNoteIcon from '@mui/icons-material/EventNote'; // Import Appointments icon
+import InventoryIcon from '@mui/icons-material/Inventory'; // Import Inventory icon
 
-const pages = ['Services', 'Inventory List', 'Update Inventory', 'Service List', 'Transfer List'];
+const pages = ['Services', 'Inventory List', 'Update Inventory', 'Service List', 'Transfer List','Register'];
 const settings = ['Login'];
 const adminEmail = [process.env.REACT_APP_ADMIN_EMAIL1, process.env.REACT_APP_ADMIN_EMAIL2, process.env.REACT_APP_ADMIN_EMAIL3,process.env.REACT_APP_ADMIN_EMAIL4];
 const workerEmail = [process.env.REACT_APP_WORKER_EMAIL1,process.env.REACT_APP_WORKER_EMAIL2,process.env.REACT_APP_WORKER_EMAIL3,process.env.REACT_APP_WORKER_EMAIL4];
@@ -51,6 +54,32 @@ function Navbar() {
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
+      {isLoggedIn && adminEmails.includes(userData.email) &&
+      <AccordionDetails>
+      <List>
+        <ListItem disablePadding component={Link} to="/details">
+          <ListItemButton>
+            <ListItemIcon><EventNoteIcon /></ListItemIcon> {/* Add icon for Appointments */}
+            <ListItemText primary="Appointments" />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </AccordionDetails>
+      }
+      <AccordionDetails>
+            <List>
+              {['Register'].map((page, index) => (
+                <ListItem key={index} disablePadding>
+                  <ListItemButton component={Link} to={`/${page.toLowerCase().replace(/\s+/g, '_')}`}>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={page} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
         {isLoggedIn && (adminEmails.includes(userData.email) || workerEmails.includes(userData.email)) && 
       <List>
         <Accordion>
@@ -58,7 +87,8 @@ function Navbar() {
             expandIcon={<ExpandMoreIcon />}
             onClick={(event) => event.stopPropagation()} // Add this line to stop event propagation
           >
-            Services
+            <ListItemIcon><DesignServicesIcon /></ListItemIcon>
+            <Typography>Services</Typography> {/* Change this line */}
           </AccordionSummary>
           <AccordionDetails>
             <List>
@@ -80,7 +110,8 @@ function Navbar() {
             expandIcon={<ExpandMoreIcon />}
             onClick={(event) => event.stopPropagation()} // Add this line to stop event propagation
           >
-            Inventory
+            <ListItemIcon><InventoryIcon /></ListItemIcon>
+            <Typography>Inventory</Typography> {/* Change this line */}
           </AccordionSummary>
           <AccordionDetails>
             <List>
@@ -101,16 +132,7 @@ function Navbar() {
       }
       <Divider />
 
-      {isLoggedIn && adminEmails.includes(userData.email) &&
-      <Button
-        key="Details"
-        component={Link}
-        to="/details"
-        sx={{ my: 2, color: 'white', display: 'block', backgroundColor: '#1976d2' }}
-      >
-        Details
-      </Button>
-      }
+      
       <List>
         <ListItem disablePadding>
           <ListItemButton component={Link} to={isLoggedIn ? '/logout' : '/login'}>

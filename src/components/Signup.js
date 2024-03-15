@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import firebase from 'firebase/app';
 
 const RegisterForm = () => {
+  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,7 +49,7 @@ const RegisterForm = () => {
   return (
     <Container maxWidth="sm">
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{"margin":"20px"}}>
           <Grid item xs={12}>
             <TextField
               fullWidth

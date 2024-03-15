@@ -58,5 +58,26 @@ button:hover {
 .MuiTypography-body1 {
     font-size: 14px;
 }
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:disabled {
+    background-color: #ccc; /* Gray out the button when disabled */
+    color: #666;
+}
+
+button:enabled {
+    background-color: #4caf50; /* Green color when enabled */
+    color: #fff;
+}
+
+button:hover:enabled {
+    background-color: #45a049; /* Darker green color on hover */
+}
 
 

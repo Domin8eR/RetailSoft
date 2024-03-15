@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import "./work.css"
@@ -18,6 +20,8 @@ import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid'; // Changed to Grid from Unstable_Grid2
 import Snackbar from '@mui/material/Snackbar';
 
+const theme = createTheme();
+
 const EmployeeWorkLog = () => {
   const navigate = useNavigate(); // useNavigate hook
 
@@ -30,7 +34,7 @@ const EmployeeWorkLog = () => {
 
   useEffect(() => {
     // Check if all required fields are filled
-    setIsFormValid(remarks !== "" && timeSpent !== "" && checkedItems.length > 0);
+    setIsFormValid(timeSpent !== "" && checkedItems.length > 0);
   }, [remarks, timeSpent, checkedItems]);
 
   const handleRemarksChange = (event) => {
@@ -95,6 +99,7 @@ const EmployeeWorkLog = () => {
   };
 
   return (
+    <ThemeProvider theme={theme}>
     <>
      <div className="parent">
         <div style={{fontSize:"30px","margin" : "20px"}}>Services</div>
@@ -218,15 +223,14 @@ const EmployeeWorkLog = () => {
       </div>
 
       <div className="buttons">
-        <Button 
-          variant="contained" 
-          color="success" 
-          style={{margin:"20px",backgroundColor:"#28a745"}}
-          onClick={handleSubmit}
+      <button 
+          className="submitBtn"
           disabled={!isFormValid}
+          onClick={handleSubmit}
+          style={{margin:"20px", backgroundColor: isFormValid ? "green" : "gray"}}
         >
           Submit
-        </Button>
+        </button>
         <Button 
           variant="contained" 
           color="error" 
@@ -244,6 +248,7 @@ const EmployeeWorkLog = () => {
     message={"Submitted , Thankyou"}
   />
   </>
+  </ThemeProvider>
   );
 };
 
