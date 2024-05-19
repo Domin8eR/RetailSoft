@@ -36,7 +36,7 @@ const Home = () => {
       </div>
 
       <div className="homeButton">
-        <Link to="/login"> {/* Link to the login page */}
+        <Link to="/appointment"> {/* Link to the login page */}
           <Fab
             style={{ backgroundColor: "#1976d2" }}
             label="kjshgkjhfskgjk"
